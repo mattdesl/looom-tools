@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1024" height="768" viewBox="-512 -384 1024 768" xmlns="http://www.w3.org/2000/svg">
+  <style>
+svg { background-color:#DF6A6B; }
+
+#looom { --version:2; }
+
+#t0 {
+--visible:1; --timeOffset:-6; --speed:1; --bookmarkIndex:-1; --latched:0; --playMode:0; --masked:0; --blendMode:0; --pressureEnabled:0; 
+stroke:#1F0000; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes t0 { 0% { opacity: 1; } 33.33333% { opacity: 0; } }
+#t0 .frame { animation:t0 3s calc(var(--index) * 1s) steps(1) infinite; }
+
+#t1 {
+--visible:1; --timeOffset:4; --speed:1; --bookmarkIndex:-1; --latched:1; --playMode:0; --masked:0; --blendMode:0; --pressureEnabled:0; 
+stroke:#1F0000; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t2 {
+--visible:1; --timeOffset:-8; --speed:1; --bookmarkIndex:-1; --latched:0; --playMode:0; --masked:0; --blendMode:0; --pressureEnabled:0; 
+stroke:#FF0000; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes t2 { 0% { opacity: 1; } 25% { opacity: 0; } }
+#t2 .frame { animation:t2 4s calc(var(--index) * 1s) steps(1) infinite; }
+
+#t3 {
+--visible:1; --timeOffset:-8; --speed:1; --bookmarkIndex:-1; --latched:0; --playMode:0; --masked:0; --blendMode:0; --pressureEnabled:0; 
+stroke:#41E500; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes t3 { 0% { opacity: 1; } 25% { opacity: 0; } }
+#t3 .frame { animation:t3 4s calc(var(--index) * 1s) steps(1) infinite; }
+
+#t4 {
+--visible:1; --timeOffset:-8; --speed:1; --bookmarkIndex:-1; --latched:0; --playMode:0; --masked:0; --blendMode:0; --pressureEnabled:0; 
+stroke:#4100FF; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes t4 { 0% { opacity: 1; } 25% { opacity: 0; } }
+#t4 .frame { animation:t4 4s calc(var(--index) * 1s) steps(1) infinite; }
+
+</style>
+  <g id="w0" class="weave">
+    <g id="t0" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-117.69,-96.31L-120.80,-99.62L-122.53,-99.62L-124.99,-96.58L-127.44,-83.17L-126.17,-75.34L-122.33,-69.50L-115.89,-67.64L-107.53,-69.31L-99.50,-75.08L-94.53,-82.11L-93.27,-91.20L-96.31,-101.68L-101.89,-107.72L-109.13,-109.24L-116.09,-108.52L-119.08,-106.40L-119.47,-102.61" />
+        <path d="M-71.97,-93.13L-73.89,-88.02L-74.83,-82.37L-75.36,-85.49L-72.03,-105.40L-66.92,-113.17L-60.75,-116.54L-55.91,-115.75L-51.94,-109.44L-44.50,-91.79L-40.45,-85.76L-36.00,-82.91" />
+        <path d="M-16.23,-100.16L-15.01,-99.17" />
+        <path d="M-15.01,-99.17L-13.52,-97.97L-8.41,-100.42L-3.50,-104.13L-0.64,-110.11L-1.50,-113.30L-6.48,-113.10L-12.31,-108.59L-15.23,-102.15L-15.01,-99.17" />
+        <path d="M-15.01,-99.17L-14.70,-95.18L-9.33,-90.20L0.81,-88.42L14.36,-90.00L27.36,-93.93" />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame">
+        <path d="M-69.38,-22.59L-69.31,-22.95" />
+        <path d="M-69.31,-22.95L-67.59,-32.74L-68.19,-38.05L-69.31,-36.13L-69.31,-22.95" />
+        <path d="M-69.31,-22.95L-65.00,9.12L-60.30,21.00L-52.80,25.91L-42.31,26.18L-37.27,23.25" />
+        <path d="M-79.53,1.23L-84.05,1.23L-78.88,0.63L-58.97,-5.14L-43.70,-11.25L-40.78,-10.98L-34.55,16.36L-31.83,20.80L-27.91,20.60L-22.88,15.49L-13.72,2.95L-10.72,1.83L-4.42,8.33L-0.38,11.05L4.67,11.05L8.58,7.27L9.31,1.89L6.92,-10.25L6.80,-17.41L7.45,-17.88" />
+        <path d="M32.47,8.79L35.66,10.71L40.36,10.98L45.94,8.46L55.16,0.36L58.02,-5.07L56.69,-12.25L49.72,-13.17L42.69,-11.25L33.73,-7.14" />
+      </g>
+      <g id="f2" style="--index:2; opacity:0;" class="frame">
+        <path d="M-2.83,51.52L-2.50,63.80L3.55,93.66L8.58,102.21L16.14,104.80L21.25,104.08" />
+        <path d="M-7.61,86.36L-14.11,86.83L-14.17,87.48L-9.59,87.55L-0.77,84.63L10.44,79.32L17.02,74.34L19.86,69.57" />
+        <path d="M19.39,46.95L18.94,43.43L19.27,51.66L24.17,93.99L26.36,103.93L29.28,107.25L32.20,102.94L38.23,84.24L40.97,79.98L42.63,79.06L49.72,88.15L53.64,91.20L58.41,92.46L64.19,91.59L72.14,88.70" />
+        <path d="M72.14,88.70L82.24,85.09L85.75,82.84L87.67,79.52L88.14,74.61L86.81,70.43L83.36,70.03L77.33,71.82L73.02,77.13L71.16,84.43L72.14,88.70" />
+        <path d="M72.14,88.70L72.94,92.13L83.69,96.77L106.52,98.77L108.94,96.98" />
+        <path d="M108.94,96.98L113.16,93.86L115.74,90.27L117.53,87.15L118.19,83.97L117.59,80.18L115.55,77.26L112.95,76.14L109.83,77.20L106.66,82.04L106.72,95.31L108.94,96.98" />
+        <path d="M108.94,96.98L112.28,99.49L127.08,99.42L149.52,90.60" />
+        <path d="M55.95,100.82L60.20,108.12L57.61,89.94L59.28,80.32L64.52,71.75L73.74,64.20" />
+      </g>
+    </g>
+    <g id="t1" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-209.99,197.50L-212.24,196.30L-211.71,186.81L-210.17,179.51L-207.33,171.22L-203.47,164.45L-199.10,160.41L-194.66,159.14L-190.53,160.81L-180.19,176.53L-174.88,180.05L-169.97,180.38" />
+        <path d="M-235.66,81.38L-236.92,78.60L-237.11,90.80L-234.86,105.47L-228.69,125.17L-225.44,131.87L-224.52,131.15" />
+        <path d="M-218.14,87.95L-218.53,83.31L-217.94,82.77L-209.46,115.15L-205.67,125.31" />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame">
+        <path d="M-241.36,95.05L-241.89,98.90L-233.74,119.33L-232.41,124.57L-232.00,131.27" />
+        <path d="M-219.06,90.67L-218.47,87.08L-213.69,107.12L-211.31,121.52L-209.72,125.91" />
+        <path d="M-221.66,166.91L-210.85,178.78L-206.27,182.30L-200.83,183.03L-193.92,177.99L-187.96,163.98L-185.10,153.44" />
+      </g>
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+    </g>
+    <g id="t2" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame" />
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame">
+        <path d="M-363.19,-62.67L-361.39,-67.44L-359.86,-78.33L-359.33,-106.74" />
+        <path d="M-359.33,-106.74L-358.68,-110.24L-359.33,-106.74" />
+        <path d="M-359.33,-106.74L-374.21,-93.79L-361.33,-109.18L-357.94,-112.10L-356.88,-112.10L-346.33,-101.81L-342.43,-99.04" />
+      </g>
+    </g>
+    <g id="t3" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame" />
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame">
+        <path d="M-301.88,-61.01L-302.88,-65.46L-305.92,-121.52L-307.46,-121.85L-311.36,-117.48L-317.60,-112.90L-320.93,-109.78L-326.69,-102.21L-325.57,-105.20L-317.21,-115.62L-311.63,-120.66L-307.46,-122.98L-304.80,-122.12L-297.10,-113.50L-293.85,-112.10L-288.88,-111.58" />
+      </g>
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+    </g>
+    <g id="t4" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame" />
+      <g id="f1" style="--index:1; opacity:0;" class="frame">
+        <path d="M-277.27,-43.63L-276.47,-47.34L-276.60,-58.56L-277.86,-77.26L-277.92,-110.51L-278.85,-123.77L-280.17,-125.84L-281.05,-125.24L-288.02,-115.09" />
+        <path d="M-288.02,-115.09L-294.32,-108.59L-298.96,-105.87L-288.02,-115.09" />
+        <path d="M-288.02,-115.09L-284.63,-118.14L-281.38,-119.53L-277.92,-118.86L-270.10,-107.26L-266.52,-104.00L-261.86,-101.88" />
+      </g>
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+    </g>
+  </g>
+</svg>

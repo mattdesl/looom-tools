@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1024" height="768" viewBox="-512 -384 1024 768" xmlns="http://www.w3.org/2000/svg">
+  <style>
+svg { background-color:#81C4FB; }
+
+#looom { --version:2; }
+
+#t0 {
+--visible:1; --timeOffset:0; --speed:12; --bookmarkIndex:-1; --latched:1; --playMode:0; --masked:1; --blendMode:0; --pressureEnabled:0; 
+fill:#C70606; stroke-opacity:0; fill-opacity:1; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t1 {
+--visible:1; --timeOffset:0; --speed:12; --bookmarkIndex:-1; --latched:1; --playMode:0; --masked:1; --blendMode:0; --pressureEnabled:0; 
+stroke:#B2B1B1; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t2 {
+--visible:1; --timeOffset:0; --speed:12; --bookmarkIndex:-1; --latched:1; --playMode:0; --masked:0; --blendMode:0; --pressureEnabled:0; 
+fill:#E80000; stroke-opacity:0; fill-opacity:1; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t3 {
+--visible:1; --timeOffset:0; --speed:12; --bookmarkIndex:-1; --latched:1; --playMode:0; --masked:1; --blendMode:0; --pressureEnabled:0; 
+stroke:#FFDFDF; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+
+</style>
+  <g id="w0" transform="translate(171.75 113.00) scale(1.03 1.03) rotate(-357.58)" class="weave">
+    <g id="t0" transform="translate(-189.25 -97.75)" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-69.32,76.98L-78.66,66.17L-81.49,57.08L-82.75,44.19L-82.19,31.47L-78.53,14.45L-72.18,-6.05L-63.44,-26.06L-52.66,-43.90L-39.21,-60.84L-24.30,-76.59L-5.95,-93.41L12.86,-107.41L31.34,-119.27L49.20,-127.95L66.15,-132.53L82.82,-134.26L101.05,-133.94L119.26,-131.56L137.25,-127.88L153.96,-122.53L168.73,-115.81L181.64,-107.67L193.38,-96.70L203.50,-83.92L211.82,-70.17L218.50,-55.32L223.02,-36.71L223.97,-25.09L221.48,-4.57L217.21,8.50L209.20,26.28L199.57,43.44L181.82,68.40L166.31,83.87L153.24,93.32L140.10,100.76L111.01,113.52L100.35,117.19L85.57,120.78L70.72,122.95L56.45,123.63L16.69,121.64L5.11,120.33L-5.64,117.62L-48.81,97.50L-54.53,91.62L-57.82,82.35" />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t1" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-261.17,66.66L-267.54,51.80L-268.62,43.15L-265.85,26.16L-260.00,12.27L-245.70,-9.08L-233.06,-29.71L-226.21,-38.50L-220.29,-43.07L-213.65,-45.99L-195.88,-50.61L-173.74,-52.51L-162.10,-49.97L-143.05,-44.09L-123.34,-39.70L-109.94,-38.07L-75.22,-37.82L-66.15,-39.61L-50.57,-45.74L-42.72,-50.45L-35.87,-55.96L-29.75,-62.22L-25.17,-68.01L-22.63,-73.46L-22.03,-79.03L-23.10,-90.77L-25.61,-104.06L-28.03,-109.75L-31.61,-115.01L-46.37,-130.55L-57.01,-146.07L-60.42,-152.23L-62.77,-158.90L-63.86,-164.98L-63.69,-174.52L-61.37,-180.73L-57.73,-186.10L-52.59,-190.76L-39.49,-199.50L-24.38,-207.61L-16.33,-210.52L-5.89,-211.86L2.41,-212.09L11.85,-211.13L21.12,-209.59L39.10,-204.81L48.96,-203.24L68.97,-202.22" />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t2" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-517.15,79.57L-517.93,74.77L-514.54,66.70L-508.46,56.54L-499.64,45.79L-489.97,36.94L-479.88,30.27L-471.50,27.15L-464.98,28.02L-459.38,32.36L-452.42,40.25L-430.88,71.09L-421.22,86.45L-417.30,90.60L-411.65,91.71L-404.98,89.56L-397.16,82.60L-373.54,54.75L-366.43,47.94L-360.79,44.29L-355.50,42.84L-350.27,43.07L-345.77,46.03L-342.50,50.41L-340.93,55.36L-340.78,62.05L-350.02,91.62L-357.70,111.13L-358.75,116.46L-358.47,121.61L-355.64,126.25L-350.73,129.65L-343.78,131.22L-318.54,131.05L-309.88,137.84L-311.79,150.41L-319.13,160.96L-331.04,173.51L-349.68,186.34L-363.73,193.83L-378.37,197.86L-392.69,198.85L-405.80,197.99L-418.09,195.03L-428.58,189.10L-437.09,183.08L-445.24,179.31L-454.35,178.27L-464.05,180.69L-474.83,187.51L-485.67,196.22L-495.62,202.95L-504.75,206.63L-513.60,207.39L-521.81,205.15L-528.52,200.23L-532.82,192.87L-534.48,184.12L-534.88,173.45L-533.52,153.61L-532.06,143.89L-527.91,130.96L-519.71,114.72L-513.64,105.89L-502.27,93.10" />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t3" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-545.14,124.03L-549.59,120.68L-551.03,117.13L-549.65,111.73L-544.18,105.64L-535.61,99.79L-512.97,89.69L-501.78,86.52L-491.43,86.01L-480.83,91.68L-473.81,99.05L-462.21,117.75L-451.50,133.20L-445.80,139.79L-440.07,144.51L-433.74,148.17L-427.02,150.07L-419.68,149.89L-410.76,146.10L-376.60,122.57L-368.36,120.92L-360.95,125.37L-357.12,129.15L-353.05,135.73L-349.03,150.19L-345.74,156.29L-340.26,161.08L-334.50,164.51L-323.23,169.18L-307.32,172.50L-284.77,174.13L-260.85,173.24" />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" style="--index:11; opacity:0;" class="frame" />
+    </g>
+  </g>
+</svg>

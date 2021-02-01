@@ -1,0 +1,41 @@
+{
+  "name": "looom-renderer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Matt DesLauriers",
+    "email": "dave.des@gmail.com",
+    "url": "https://github.com/mattdesl"
+  },
+  "dependencies": {
+    "camelcase": "^6.2.0",
+    "canvas-sketch": "^0.7.4",
+    "css-transform-to-mat4": "^1.0.4",
+    "gl-mat4": "^1.2.0",
+    "gl-matrix": "^3.3.0",
+    "mat4-css-parse": "^1.0.3",
+    "parse-svg-path": "^0.1.2",
+    "shady-css-parser": "^0.1.0",
+    "svg-parser": "^2.0.4",
+    "tiny-css-parser": "^0.10.0"
+  },
+  "devDependencies": {
+    "canvas-sketch-util": "^1.10.0",
+    "chromotome": "^1.19.1",
+    "simple-input-events": "^2.0.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattdesl/looom-renderer.git"
+  },
+  "homepage": "https://github.com/mattdesl/looom-renderer",
+  "bugs": {
+    "url": "https://github.com/mattdesl/looom-renderer/issues"
+  }
+}
