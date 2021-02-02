@@ -10,14 +10,17 @@
     "url": "https://github.com/mattdesl"
   },
   "dependencies": {
+    "array-almost-equal": "^1.0.0",
     "camelcase": "^6.2.0",
     "canvas-sketch": "^0.7.4",
     "css-transform-to-mat4": "^1.0.4",
+    "defined": "^1.0.0",
     "gl-mat4": "^1.2.0",
     "gl-matrix": "^3.3.0",
     "mat4-css-parse": "^1.0.3",
     "parse-svg-path": "^0.1.2",
     "shady-css-parser": "^0.1.0",
+    "simplify-path": "^1.1.0",
     "svg-parser": "^2.0.4",
     "tiny-css-parser": "^0.10.0"
   },
