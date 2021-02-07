@@ -4,7 +4,7 @@ const parsePath = require("parse-svg-path");
 const { traverseDepthFirst } = require("./traverse");
 const shadyCss = require("shady-css-parser");
 const camelCase = require("camelcase");
-const { mat2d } = require("gl-matrix");
+const { mat2d, vec2 } = require("gl-matrix");
 
 class Thread {
   constructor() {
@@ -14,11 +14,96 @@ class Thread {
 }
 
 module.exports = function parse(text, opts = {}) {
-  const contents = parseLooomSVGContents(text, opts);
+  const weave = parseLooomSVGContents(text, opts);
 
-  const { parseContents = true } = opts;
-  if (parseContents) {
+  // Parse all the transformations into matrices
+  // and then turn path AST into simplified objects
+  parseTransforms(weave);
+
+  // Apply the view box transformation
+  applyView(weave);
+
+  // Now we figure out the bounds and then recenter it
+  // applyBounds(weave);
+
+  let duration = 0;
+  weave.threads.forEach((thread) => {
+    const frameCount = thread.frames.length;
+    const fps = thread.options.speed;
+    const dur = frameCount / fps;
+    duration = Math.max(duration, dur);
+  });
+
+  return {
+    ...weave,
+    duration,
+  };
+
+  function applyBounds(weave, recenter = true) {
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+
+    weave.threads.forEach((thread) => {
+      const { visible = true, fillOpacity, strokeOpacity } = thread.options;
+      const show = visible && (strokeOpacity > 0 || fillOpacity > 0);
+      // non-visible threads are skipped from bound check
+      if (!show) return;
+      thread.frames.forEach((frame) => {
+        frame.paths.forEach((path) => {
+          path.commands.forEach((command) => {
+            const t = command[0];
+            if (t === "M" || t === "L") {
+              const vec = command.slice(1, 3);
+              const stack = [
+                path.transform,
+                frame.transform,
+                thread.transform,
+                weave.transform,
+              ];
+              stack.forEach((m) => vec2.transformMat2d(vec, vec, m));
+              const x = vec[0];
+              const y = vec[1];
+              if (x < minX) minX = x;
+              if (y < minY) minY = y;
+              if (x > maxX) maxX = x;
+              if (y > maxY) maxY = y;
+            }
+          });
+        });
+      });
+    });
+
+    weave.innerX = minX;
+    weave.innerY = minY;
+    weave.innerWidth = maxX - minX;
+    weave.innerHeight = maxY - minY;
+    const ax = (weave.width - weave.innerWidth) / 2 - weave.innerX;
+    const ay = (weave.height - weave.innerHeight) / 2 - weave.innerY;
+
+    const translation = [ax, ay];
+
+    // pre-multiply transformation
+    const preTransform = mat2d.fromTranslation([], translation);
+    mat2d.multiply(weave.transform, preTransform, weave.transform);
+
+    weave.innerX += ax;
+    weave.innerY += ay;
+  }
+
+  function applyView(weave) {
+    const [minX, minY, vw, vh] = weave.viewBox;
+    const matrix = mat2d.identity([]);
+    // console.log(weave.width / vw);
+    mat2d.translate(matrix, matrix, [-minX, -minY]);
+    mat2d.scale(matrix, matrix, [weave.width / vw, weave.height / vh]);
+    mat2d.multiply(weave.view, matrix, weave.view);
+  }
+
+  function parseTransforms(contents) {
     contents.transform = parseTransform(contents.transform);
+    contents.view = mat2d.identity([]);
     const threads = contents.threads;
     threads.forEach((thread) => {
       thread.transform = parseTransform(thread.transform);
@@ -53,19 +138,6 @@ module.exports = function parse(text, opts = {}) {
       });
     });
   }
-
-  let duration = 0;
-  contents.threads.forEach((thread) => {
-    const frameCount = thread.frames.length;
-    const fps = thread.options.speed;
-    const dur = frameCount / fps;
-    duration = Math.max(duration, dur);
-  });
-
-  return {
-    ...contents,
-    duration,
-  };
 };
 
 function splitContents(contents) {

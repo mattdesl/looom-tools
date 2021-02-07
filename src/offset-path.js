@@ -1,54 +1,102 @@
 const { mod, linspace, lerp, lerpArray } = require("canvas-sketch-util/math");
 const arrayAlmostEqual = require("array-almost-equal");
-
-const defined = require("defined");
 const { vec2 } = require("gl-matrix");
+
+function defined(a, b) {
+  return a != null ? a : b;
+}
 
 module.exports = offsetPolyline;
 function offsetPolyline(polyline, opts = {}) {
-  const lineWidth = defined(opts.lineWidth, 1);
-  const lineJoin = defined(opts.lineJoin, "miter"); // "bevel|round|miter"
-  const lineCap = defined(opts.lineCap, "butt"); // "butt|round|square"
+  const lineWidth = defined(opts.width, 1);
+  const lineJoin = defined(opts.join, "miter"); // "bevel|round|miter"
+  const lineCap = defined(opts.cap, "butt"); // "butt|round|square"
   const miterLimit = defined(opts.miterLimit, 10);
-  const minCapRadius = defined(opts.minCapRadius, -Infinity);
-
+  const variableWidth = opts.variableWidth !== false;
+  const vertexData = opts.vertexData !== false;
+  const scaleFn = opts.scale;
   // TODO: Handle single-point case
   // TODO: Handle zero-point case
 
   const closed = Boolean(opts.closed);
   const points = cleanPolyline(polyline, opts);
-  // if (points.length <= 2) throw new Error('not yet implented length <= 2');
 
   const edges = [
     { direction: -1, list: [] },
     { direction: 1, list: [] },
   ];
 
-  if (closed) {
+  if (points.length >= 2) {
     for (let i = 0; i < points.length; i++) {
-      const previous = points[mod(i - 1, points.length)];
       const current = points[i];
-      const next = points[mod(i + 1, points.length)];
-      segmentIterator(previous, current, next, i);
+      let previous, next;
+      if (closed) {
+        previous = points[mod(i - 1, points.length)];
+        next = points[mod(i + 1, points.length)];
+      } else {
+        previous = i === 0 ? undefined : points[i - 1];
+        next = i < points.length - 1 ? points[i + 1] : undefined;
+      }
+      segmentIterator(previous, current, next, i, points.length);
     }
-  } else {
-    for (let i = 0; i < points.length; i++) {
-      const previous = i === 0 ? undefined : points[i - 1];
-      const current = points[i];
-      const next = i < points.length - 1 ? points[i + 1] : undefined;
-      segmentIterator(previous, current, next, i);
+  } else if (points.length === 1) {
+    if (lineCap === "round") {
+      const [point, currentLineWidth, currentScale] = fromVertex(points[0]);
+      const vertWidth = toVertLineWidth(currentLineWidth, currentScale, 0, 1);
+      arcTo(
+        point[0],
+        point[1],
+        vertWidth / 2,
+        0,
+        Math.PI * 2,
+        false,
+        undefined,
+        edges[0].list
+      );
     }
   }
 
   const edge0 = edges[0].list;
   const edge1 = edges[1].list.slice().reverse();
+
   return {
     contours: closed ? [edge0, edge1] : [edge0.concat(edge1)],
     vertices: edge0.concat(edge1),
     edges: edges.map((e) => e.list),
   };
 
-  function segmentIterator(previousVertex, currentVertex, nextVertex, i) {
+  function toVertLineWidth(currentLineWidth, currentScale, i, pointCount) {
+    if (variableWidth) {
+      let vertLineWidth =
+        vertexData &&
+        typeof currentLineWidth === "number" &&
+        isFinite(currentLineWidth)
+          ? currentLineWidth
+          : lineWidth;
+      if (
+        vertexData &&
+        typeof currentScale === "number" &&
+        isFinite(currentScale)
+      ) {
+        vertLineWidth *= currentScale;
+      }
+      if (scaleFn) {
+        const t = i / pointCount;
+        vertLineWidth *= scaleFn(t, i, pointCount, closed);
+      }
+      return vertLineWidth;
+    } else {
+      return lineWidth;
+    }
+  }
+
+  function segmentIterator(
+    previousVertex,
+    currentVertex,
+    nextVertex,
+    i,
+    pointCount
+  ) {
     const [previous] = fromVertex(previousVertex);
     const [current, currentLineWidth, currentScale] = fromVertex(currentVertex);
     const [next] = fromVertex(nextVertex);
@@ -56,26 +104,19 @@ function offsetPolyline(polyline, opts = {}) {
     const result = getJoinTangent(previous, current, next);
     const { join, tangent, miterLength, clockwise } = result;
 
-    let vertLineWidth =
-      typeof currentLineWidth === "number" && isFinite(currentLineWidth)
-        ? currentLineWidth
-        : lineWidth;
-    if (typeof currentScale === "number" && isFinite(currentScale)) {
-      vertLineWidth *= currentScale;
-    }
+    let vertLineWidth = toVertLineWidth(
+      currentLineWidth,
+      currentScale,
+      i,
+      pointCount
+    );
 
     const halfLineWidth = vertLineWidth / 2;
 
     let curLineJoin = lineJoin;
 
     // add start cap
-    if (
-      !previous &&
-      !closed &&
-      next &&
-      lineCap === "round" &&
-      halfLineWidth > minCapRadius
-    ) {
+    if (!previous && !closed && next && lineCap === "round") {
       const len = vec2.distance(current, next);
       // if (halfLineWidth <= 0.5) console.log("LEN", len, halfLineWidth);
       const pts = getRoundCap(
@@ -179,12 +220,7 @@ function offsetPolyline(polyline, opts = {}) {
     });
 
     // add start cap
-    if (
-      !next &&
-      !closed &&
-      lineCap === "round" &&
-      halfLineWidth > minCapRadius
-    ) {
+    if (!next && !closed && lineCap === "round") {
       const pts = getRoundCap(
         current,
         previous,
@@ -195,6 +231,47 @@ function offsetPolyline(polyline, opts = {}) {
       );
       pts.forEach((p) => edges[0].list.push(p));
     }
+  }
+
+  function fromVertex(item) {
+    if (!item) return [undefined, undefined, undefined];
+    if (Array.isArray(item)) {
+      return [item, undefined, undefined];
+    } else {
+      return [item.position, item.lineWidth, item.scale];
+    }
+  }
+
+  function verticesAlmostEqual(a, b) {
+    const [pointA] = fromVertex(a);
+    const [pointB] = fromVertex(b);
+    return arrayAlmostEqual(pointA, pointB);
+  }
+
+  function cleanPolyline(polyline, opts = {}) {
+    const points = [];
+    let previous;
+    for (let i = 0; i < polyline.length; i++) {
+      const current = polyline[i];
+      if (!previous || !verticesAlmostEqual(current, previous)) {
+        points.push(current);
+        previous = current;
+      }
+    }
+
+    // For convenience, if the path is closed and the start and end
+    // points are nearly identical, clean it up by popping off the last
+    // point and re-closing it ourselves
+    let autoClose = opts.autoClose !== false;
+    if (
+      autoClose &&
+      opts.closed === true &&
+      points.length >= 2 &&
+      verticesAlmostEqual(points[0], points[points.length - 1])
+    ) {
+      points.pop();
+    }
+    return points;
   }
 }
 
@@ -231,15 +308,6 @@ function getRoundCap(
 
 function outerProduct(P, A, B) {
   return (P[0] - A[0]) * (B[1] - A[1]) - (P[1] - A[1]) * (B[0] - A[0]);
-}
-
-function fromVertex(item) {
-  if (!item) return [undefined, undefined, undefined];
-  if (Array.isArray(item)) {
-    return [item, undefined, undefined];
-  } else {
-    return [item.position, item.lineWidth, item.scale];
-  }
 }
 
 function getJoinTangent(previous, current, next) {
@@ -304,6 +372,8 @@ function getNormal(a, b) {
     const len = Math.sqrt(len2);
     result[0] /= len;
     result[1] /= len;
+  } else {
+    return [0, 1];
   }
   return result;
 }
@@ -405,31 +475,6 @@ function getRoundArc(radius, current, p0, p1, next, clockwise, steps) {
   );
 }
 
-function cleanPolyline(polyline, opts = {}) {
-  const points = [];
-  let previous;
-  for (let i = 0; i < polyline.length; i++) {
-    const current = polyline[i];
-    if (!previous || !arrayAlmostEqual(current, previous)) {
-      points.push(current);
-      previous = current;
-    }
-  }
-
-  // For convenience, if the path is closed and the start and end
-  // points are nearly identical, clean it up by popping off the last
-  // point and re-closing it ourselves
-  let autoClose = opts.autoClose !== false;
-  if (
-    autoClose &&
-    opts.closed === true &&
-    points.length >= 2 &&
-    arrayAlmostEqual(points[0], points[points.length - 1])
-  ) {
-    points.pop();
-  }
-  return points;
-}
 function intersectLineSegmentLineSegment(p1, p2, p3, p4) {
   // Reference:
   // https://github.com/evil-mad/EggBot/blob/master/inkscape_driver/eggbot_hatch.py
@@ -450,4 +495,16 @@ function intersectLineSegmentLineSegment(p1, p2, p3, p4) {
   const sa = na / d;
   if (sa < 0 || sa > 1) return -1;
   return sa;
+}
+
+module.exports.drawContours = drawContours;
+function drawContours(context, contours) {
+  context.beginPath();
+  contours.forEach((path) => {
+    path.forEach((point, i) => {
+      if (i === 0) context.moveTo(point[0], point[1]);
+      else context.lineTo(point[0], point[1]);
+    });
+    context.closePath();
+  });
 }
