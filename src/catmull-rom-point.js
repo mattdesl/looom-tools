@@ -1,6 +1,8 @@
 /**
  * Catmull-Rom "getPoint" function taken from ThreeJS.
  */
+
+//TODO: replace with gl-matrix
 const vec3DistSq = require("gl-vec3/squaredDistance");
 const vec3Add = require("gl-vec3/add");
 const vec3Sub = require("gl-vec3/subtract");

@@ -1,25 +1,12 @@
 const simplifyPath = require("simplify-path");
-const CatmullRomSpline = require("../src/catmull-rom-spline");
+const CatmullRomSpline = require("./catmull-rom-spline");
 const math = require("canvas-sketch-util/math");
 
-// export class TouchPoint {
-//   constructor() {
-//     this.position = [0, 0];
-//     this.pressure = 0.5;
-//     this.type = "default";
-//     this.size = [1, 1];
-//     this.azimuthAngle = 0;
-//     this.altitudeAngle = 0;
-//     this.rotationAngle = 0;
-//     this.time = 0;
-//   }
-// }
-
-export default function processInputPath(input, closed = false) {
+module.exports = processInputPath;
+function processInputPath(input, closed = false) {
   if (input.length <= 3) return input.slice();
 
   const points = input.map((p) => p.position);
-
   const scale = input.map((p) => p.scale);
   // const scale = [];
   // let deltaTime = 1 / 60;

@@ -24,7 +24,7 @@ module.exports = function parse(text, opts = {}) {
   applyView(weave);
 
   // Now we figure out the bounds and then recenter it
-  // applyBounds(weave);
+  applyBounds(weave, opts.recenter);
 
   let duration = 0;
   weave.threads.forEach((thread) => {
@@ -39,7 +39,7 @@ module.exports = function parse(text, opts = {}) {
     duration,
   };
 
-  function applyBounds(weave, recenter = true) {
+  function applyBounds(weave, recenter = false) {
     let minX = Infinity;
     let minY = Infinity;
     let maxX = -Infinity;
@@ -61,6 +61,7 @@ module.exports = function parse(text, opts = {}) {
                 frame.transform,
                 thread.transform,
                 weave.transform,
+                weave.view,
               ];
               stack.forEach((m) => vec2.transformMat2d(vec, vec, m));
               const x = vec[0];
@@ -79,25 +80,30 @@ module.exports = function parse(text, opts = {}) {
     weave.innerY = minY;
     weave.innerWidth = maxX - minX;
     weave.innerHeight = maxY - minY;
-    const ax = (weave.width - weave.innerWidth) / 2 - weave.innerX;
-    const ay = (weave.height - weave.innerHeight) / 2 - weave.innerY;
-
-    const translation = [ax, ay];
 
     // pre-multiply transformation
-    const preTransform = mat2d.fromTranslation([], translation);
-    mat2d.multiply(weave.transform, preTransform, weave.transform);
-
-    weave.innerX += ax;
-    weave.innerY += ay;
+    if (recenter) {
+      const ax = (weave.width - weave.innerWidth) / 2 - weave.innerX;
+      const ay = (weave.height - weave.innerHeight) / 2 - weave.innerY;
+      const translation = [ax, ay];
+      const preTransform = mat2d.fromTranslation([], translation);
+      mat2d.multiply(weave.transform, preTransform, weave.transform);
+      weave.innerX += ax;
+      weave.innerY += ay;
+    }
   }
 
   function applyView(weave) {
     const [minX, minY, vw, vh] = weave.viewBox;
     const matrix = mat2d.identity([]);
-    // console.log(weave.width / vw);
     mat2d.translate(matrix, matrix, [-minX, -minY]);
-    mat2d.scale(matrix, matrix, [weave.width / vw, weave.height / vh]);
+
+    // TODO: Figure out viewBox math
+    // Low priority as it seems a bit complex and all weaves
+    // are using the same viewbox size as viewport size anyways...
+    // but could be worth it?
+    // mat2d.scale(matrix, matrix, [weave.width / vw, weave.height / vh]);
+
     mat2d.multiply(weave.view, matrix, weave.view);
   }
 
@@ -322,8 +328,13 @@ function parseLooomSVGContents(text, opts = {}) {
   }
 }
 
-function isNumber(x) {
-  if (typeof x === "number") return true;
-  if (/^0x[0-9a-f]+$/i.test(x)) return true;
-  return /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/.test(x);
+function isNumber(str) {
+  //   if (typeof x === "number") return true;
+  //   if (/^0x[0-9a-f]+$/i.test(x)) return true;
+  //   return /^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(e[-+]?\d+)?$/.test(x);
+  if (typeof str != "string") return false; // we only process strings!
+  return (
+    !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(str))
+  ); // ...and ensure strings of whitespace fail
 }
