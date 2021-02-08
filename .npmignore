@@ -9,3 +9,5 @@ demo/
 .npmignore
 LICENSE.md
 test/fixtures/private
+.cache
+public/

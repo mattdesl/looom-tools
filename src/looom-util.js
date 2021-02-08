@@ -1,3 +1,6 @@
+const processInputPath = require("./util/process-input");
+const offsetPath = require("./util/offset-path");
+
 const defaultMathRandom = () => Math.random();
 
 module.exports.getFrameIndex = getFrameIndex;
@@ -30,6 +33,50 @@ function getFrameIndex(thread, time, random = defaultMathRandom) {
   return curFrame;
 }
 
+module.exports.expandAllPolylines = expandAllPolylines;
+function expandAllPolylines(weave, resamplePaths) {
+  weave.threads.forEach((thread) => {
+    thread.frames.forEach((frame) => {
+      frame.paths.forEach((path) => {
+        if (path.strokeProfile) {
+          path.offsetPaths = expandPolylines(thread, path, resamplePaths);
+        }
+      });
+    });
+  });
+}
+
+module.exports.expandPolylines = expandPolylines;
+function expandPolylines(thread, path, resamplePaths = false) {
+  const { strokeWidth = 1 } = thread.options;
+  const lineWidth = Math.max(1e-5, strokeWidth);
+  const polylines = getPolylines(path.commands);
+  let index = 0;
+  const scaledLines = polylines.map((polyline) => {
+    let scaledLine = polyline.map((position, i, list) => {
+      return {
+        position,
+        scale: path.strokeProfile[index + i],
+      };
+    });
+    index += polyline.length;
+    return scaledLine;
+  });
+
+  return scaledLines.map((input) => {
+    if (resamplePaths) input = processInputPath(input, false);
+    if (input.length === 0) {
+      return [];
+    } else {
+      return offsetPath(input, {
+        join: "round",
+        cap: "round",
+        width: lineWidth,
+      }).contours;
+    }
+  });
+}
+
 function wrap(value, from, to) {
   if (typeof from !== "number" || typeof to !== "number") {
     throw new TypeError('Must specify "to" and "from" arguments as numbers');
@@ -49,4 +96,36 @@ function wrap(value, from, to) {
 
 function mod(a, b) {
   return ((a % b) + b) % b;
+}
+
+function getPolylines(commands) {
+  const polylines = [];
+  let line = [];
+  let origin = null;
+  commands.forEach((c) => {
+    const t = c[0];
+    const args = c.slice(1);
+    if (t === "M") {
+      if (line.length) {
+        polylines.push(line);
+        line = [];
+      }
+      origin = args;
+      line.push(args.slice());
+    } else if (t === "L") {
+      if (!origin) origin = args;
+      line.push(args.slice());
+    } else if (t === "Z") {
+      origin = null;
+      if (line.length) {
+        polylines.push(line);
+        line = [];
+      }
+    }
+  });
+  if (line.length) {
+    polylines.push(line);
+    line = [];
+  }
+  return polylines;
 }

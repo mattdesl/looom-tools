@@ -12,7 +12,6 @@ Random.setSeed("" || Random.getRandomSeed());
 console.log(Random.getSeed());
 const math = require("canvas-sketch-util/math");
 const { mat2d, vec2 } = require("gl-matrix");
-const arrayAlmostEqual = require("array-almost-equal");
 
 const settings = {
   suffix: Random.getSeed(),
@@ -25,7 +24,7 @@ const settings = {
 
 const sketch = async (props) => {
   const { update, canvas } = props;
-  const resp = await fetch("test/fixtures/testpaths.svg");
+  const resp = await fetch("test/fixtures/Earthy1.svg");
   const svgText = await resp.text();
   const weave = parse(svgText);
   const renderWeave = createRenderer(weave);
@@ -49,9 +48,6 @@ const sketch = async (props) => {
       thread.options.fill = color;
     });
   };
-
-  const identity = mat2d.identity([]);
-  const matrix = weave.transform.slice();
 
   return {
     render,

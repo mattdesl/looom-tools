@@ -1,5 +1,4 @@
 const { parse: parseSVG } = require("svg-parser");
-const { parseTree: parseRawCSS } = require("tiny-css-parser");
 const parsePath = require("parse-svg-path");
 const { traverseDepthFirst } = require("./util/traverse");
 const shadyCss = require("shady-css-parser");

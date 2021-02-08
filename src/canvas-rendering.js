@@ -1,9 +1,11 @@
-const { getFrameIndex } = require("./looom-util");
-const offsetPath = require("./util/offset-path");
+const {
+  getFrameIndex,
+  expandPolylines,
+  expandAllPolylines,
+} = require("./looom-util");
+
 const fitObject = require("./util/fit");
 const { mat2d } = require("gl-matrix");
-// const clone = require("rfdc/default");
-const processInputPath = require("./util/process-input");
 
 module.exports.createRenderer = createRenderer;
 
@@ -14,10 +16,12 @@ function createRenderer(weave, opts = {}) {
   // expand polylines
   // expandPolylines(weave);
 
-  const { refit = true, resamplePaths = false, cacheOffsetPaths = true } = opts;
+  const { resamplePaths = false, cacheOffsetPaths = true } = opts;
 
-  const { fit = "contain", scale = 1, offsetX = 0.5, offsetY = 0.5 } =
-    opts.fit || {};
+  let refit = true;
+  if (opts.fit === false) refit = false;
+  const fitOpts = opts.fit && typeof opts.fit === "object" ? opts.fit : {};
+  const { fit = "contain", scale = 1, offsetX = 0.5, offsetY = 0.5 } = fitOpts;
 
   const refitTransform = mat2d.identity([]);
   const offscreen = createContext();
@@ -33,6 +37,7 @@ function createRenderer(weave, opts = {}) {
 
   return (context, props) => {
     const { width = weave.width, height = weave.height, time = 0 } = props;
+
     if (refit !== false) {
       const fitted = fitObject({
         fit,
@@ -168,9 +173,12 @@ function createRenderer(weave, opts = {}) {
     if (masking || blendMode > 1) opacity = 1;
     else if (stroke && strokeOpacity > 0) opacity = strokeOpacity;
     else opacity = fillOpacity;
+    const oldTransform = context.getTransform();
+    context.resetTransform();
     context.globalAlpha = opacity;
     context.drawImage(offscreen.canvas, 0, 0);
     context.globalCompositeOperation = "source-over";
+    context.setTransform(oldTransform);
   }
 
   function resetMask(mask, w, h) {
@@ -202,48 +210,6 @@ function createRenderer(weave, opts = {}) {
       context: canvas.getContext("2d"),
     };
   }
-}
-
-function expandPolylines(thread, path, resamplePaths = false) {
-  const { strokeWidth = 1 } = thread.options;
-  const lineWidth = Math.max(1e-5, strokeWidth);
-  const polylines = getPolylines(path.commands);
-  let index = 0;
-  const scaledLines = polylines.map((polyline) => {
-    let scaledLine = polyline.map((position, i, list) => {
-      return {
-        position,
-        scale: path.strokeProfile[index + i],
-      };
-    });
-    index += polyline.length;
-    return scaledLine;
-  });
-
-  return scaledLines.map((input) => {
-    if (resamplePaths) input = processInputPath(input, false);
-    if (input.length === 0) {
-      return [];
-    } else {
-      return offsetPath(input, {
-        join: "round",
-        cap: "round",
-        width: lineWidth,
-      }).contours;
-    }
-  });
-}
-
-function expandAllPolylines(weave, resamplePaths) {
-  weave.threads.forEach((thread) => {
-    thread.frames.forEach((frame) => {
-      frame.paths.forEach((path) => {
-        if (path.strokeProfile) {
-          path.offsetPaths = expandPolylines(thread, path, resamplePaths);
-        }
-      });
-    });
-  });
 }
 
 function isThreadVisible(thread) {
@@ -365,38 +331,6 @@ function drawContours(context, contours) {
     });
     context.closePath();
   });
-}
-
-function getPolylines(commands) {
-  const polylines = [];
-  let line = [];
-  let origin = null;
-  commands.forEach((c) => {
-    const t = c[0];
-    const args = c.slice(1);
-    if (t === "M") {
-      if (line.length) {
-        polylines.push(line);
-        line = [];
-      }
-      origin = args;
-      line.push(args.slice());
-    } else if (t === "L") {
-      if (!origin) origin = args;
-      line.push(args.slice());
-    } else if (t === "Z") {
-      origin = null;
-      if (line.length) {
-        polylines.push(line);
-        line = [];
-      }
-    }
-  });
-  if (line.length) {
-    polylines.push(line);
-    line = [];
-  }
-  return polylines;
 }
 
 function drawCommands(context, commands) {
