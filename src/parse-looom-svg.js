@@ -1,7 +1,7 @@
 const { parse: parseSVG } = require("svg-parser");
 const { parseTree: parseRawCSS } = require("tiny-css-parser");
 const parsePath = require("parse-svg-path");
-const { traverseDepthFirst } = require("./traverse");
+const { traverseDepthFirst } = require("./util/traverse");
 const shadyCss = require("shady-css-parser");
 const camelCase = require("camelcase");
 const { mat2d, vec2 } = require("gl-matrix");

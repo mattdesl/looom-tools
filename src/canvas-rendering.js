@@ -1,9 +1,9 @@
-const defaultMathRandom = () => Math.random();
-const offsetPath = require("./offset-path");
-const fit = require("./fit");
+const { getFrameIndex } = require("./looom-util");
+const offsetPath = require("./util/offset-path");
+const fitObject = require("./util/fit");
 const { mat2d } = require("gl-matrix");
 // const clone = require("rfdc/default");
-const processInputPath = require("./process-input");
+const processInputPath = require("./util/process-input");
 
 module.exports.createRenderer = createRenderer;
 
@@ -14,7 +14,10 @@ function createRenderer(weave, opts = {}) {
   // expand polylines
   // expandPolylines(weave);
 
-  const { refit = true, resamplePaths = false } = opts;
+  const { refit = true, resamplePaths = false, cacheOffsetPaths = true } = opts;
+
+  const { fit = "contain", scale = 1, offsetX = 0.5, offsetY = 0.5 } =
+    opts.fit || {};
 
   const refitTransform = mat2d.identity([]);
   const offscreen = createContext();
@@ -24,14 +27,18 @@ function createRenderer(weave, opts = {}) {
     buffer: createContext(),
   };
 
+  if (cacheOffsetPaths) {
+    expandAllPolylines(weave, resamplePaths);
+  }
+
   return (context, props) => {
     const { width = weave.width, height = weave.height, time = 0 } = props;
     if (refit !== false) {
-      const fitted = fit({
-        fit: "contain",
-        scale: 1,
-        offsetX: 0.5,
-        offsetY: 0.5,
+      const fitted = fitObject({
+        fit,
+        scale,
+        offsetX,
+        offsetY,
         parentWidth: width,
         parentHeight: height,
         childWidth: weave.width,
@@ -134,7 +141,14 @@ function createRenderer(weave, opts = {}) {
     offscreen.context.transform(...weave.transform);
 
     // render the thread to buffer
-    renderThread(offscreen.context, thread, time, resamplePaths, masking);
+    renderThread(
+      offscreen.context,
+      thread,
+      time,
+      resamplePaths,
+      cacheOffsetPaths,
+      masking
+    );
 
     offscreen.context.restore();
 
@@ -151,7 +165,7 @@ function createRenderer(weave, opts = {}) {
       : getBlendMode(blendMode);
 
     let opacity = 1;
-    if (masking) opacity = 1;
+    if (masking || blendMode > 1) opacity = 1;
     else if (stroke && strokeOpacity > 0) opacity = strokeOpacity;
     else opacity = fillOpacity;
     context.globalAlpha = opacity;
@@ -171,8 +185,6 @@ function createRenderer(weave, opts = {}) {
 
   function applyMask(context, mask, width, height) {
     mask.buffer.context.globalCompositeOperation = "source-over";
-    // mask.buffer.context.fillStyle = "black";
-    // mask.buffer.context.fillRect(0, 0, width, height);
     mask.buffer.context.drawImage(mask.bitmask.canvas, 0, 0);
     mask.buffer.context.globalCompositeOperation = "source-in";
     mask.buffer.context.drawImage(mask.children.canvas, 0, 0);
@@ -239,7 +251,14 @@ function isThreadVisible(thread) {
   return visible && (strokeOpacity > 0 || fillOpacity > 0);
 }
 
-function renderThread(context, thread, time, resamplePaths, masking = false) {
+function renderThread(
+  context,
+  thread,
+  time,
+  resamplePaths,
+  cacheOffsetPaths,
+  masking = false
+) {
   const {
     visible = true,
     timeOffset = 0,
@@ -289,7 +308,11 @@ function renderThread(context, thread, time, resamplePaths, masking = false) {
     context.transform(...path.transform);
 
     if (isStroke && path.strokeProfile) {
-      const offsetPaths = expandPolylines(thread, path, resamplePaths);
+      let offsetPaths = path.offsetPaths;
+      if (!offsetPaths) {
+        offsetPaths = expandPolylines(thread, path, resamplePaths);
+        if (cacheOffsetPaths) path.offsetPaths = offsetPaths;
+      }
 
       context.fillStyle = masking ? maskForeground : stroke;
       offsetPaths.forEach((contours) => {
@@ -327,56 +350,10 @@ function getBlendMode(n) {
     case 2:
       return "multiply";
     case 3:
-      return "difference";
+      return "exclusion";
     default:
       return "source-over";
   }
-}
-
-function getFrameIndex(thread, time, random = defaultMathRandom) {
-  const {
-    speed = 12,
-    latched = false,
-    timeOffset = 0,
-    playMode = 0,
-  } = thread.options;
-  if (playMode === 3) return Math.floor(random() * thread.frames.length);
-  const duration = thread.frames.length / speed;
-  const N = thread.frames.length;
-  const playDirection = playMode === 0 ? 1 : -1;
-  let elapsed = latched ? 0 : (time + timeOffset) * playDirection;
-
-  let curFrameReal = speed * elapsed;
-  curFrameReal = wrap(curFrameReal, 0, N);
-  if (!latched && playMode === 2) {
-    // curFrameReal = Math.abs(-Math.floor(N) + curFrameReal);
-  }
-  let curFrame = Math.floor(curFrameReal);
-
-  const fract = curFrameReal - curFrame;
-  curFrame = Math.max(0, Math.min(curFrame, thread.frames.length - 1));
-  return curFrame;
-}
-
-function wrap(value, from, to) {
-  if (typeof from !== "number" || typeof to !== "number") {
-    throw new TypeError('Must specify "to" and "from" arguments as numbers');
-  }
-  // algorithm from http://stackoverflow.com/a/5852628/599884
-  if (from > to) {
-    var t = from;
-    from = to;
-    to = t;
-  }
-  var cycle = to - from;
-  if (cycle === 0) {
-    return to;
-  }
-  return value - cycle * Math.floor((value - from) / cycle);
-}
-
-function mod(a, b) {
-  return ((a % b) + b) % b;
 }
 
 function drawContours(context, contours) {

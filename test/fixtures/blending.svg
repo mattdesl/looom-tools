@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1024" height="768" viewBox="-512 -384 1024 768" xmlns="http://www.w3.org/2000/svg">
+  <style>
+svg { background-color:#FDDCB1; }
+
+#looom { --version:2; }
+
+#t0 {
+--visible:1; --timeOffset:0; --speed:4; --bookmarkIndex:-1; --latched:1; --playMode:1; --masked:0; --blendMode:0; --pressureEnabled:1; 
+stroke:#AF64F0; stroke-opacity:1; fill-opacity:0; stroke-width:29.19221; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t1 {
+--visible:1; --timeOffset:0; --speed:4; --bookmarkIndex:-1; --latched:1; --playMode:1; --masked:1; --blendMode:0; --pressureEnabled:1; 
+stroke:#E6ABA9; stroke-opacity:1; fill-opacity:0; stroke-width:29.19221; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t2 {
+--visible:1; --timeOffset:0; --speed:4; --bookmarkIndex:-1; --latched:1; --playMode:1; --masked:0; --blendMode:2; --pressureEnabled:1; 
+stroke:#E0B115; stroke-opacity:1; fill-opacity:0; stroke-width:17.3927; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t3 {
+--visible:1; --timeOffset:0; --speed:4; --bookmarkIndex:-1; --latched:1; --playMode:1; --masked:0; --blendMode:3; --pressureEnabled:1; 
+stroke:#E0B115; stroke-opacity:1; fill-opacity:0; stroke-width:17.3927; stroke-linecap:round; stroke-linejoin:round;
+}
+
+#t4 {
+--visible:1; --timeOffset:0; --speed:4; --bookmarkIndex:-1; --latched:1; --playMode:1; --masked:0; --blendMode:2; --pressureEnabled:1; 
+stroke:#E0B115; stroke-opacity:1; fill-opacity:0; stroke-width:17.3927; stroke-linecap:round; stroke-linejoin:round;
+}
+
+</style>
+  <g id="w0" transform="translate(257.00 111.25) scale(2.03 2.03) rotate(-350.02)" class="weave">
+    <g id="t0" transform="translate(-57.49 -64.51)" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-149.00,16.22L-151.19,14.50L-151.99,10.18L-144.83,2.63L-130.36,-8.13L-121.41,-13.37L-111.19,-17.48L-100.97,-19.80L-90.08,-21.07L-78.88,-21.27L-68.13,-20.73L-57.30,-18.81L-51.58,-16.51" stroke-profile="0.1 0.1 0.8281167 0.7971171 0.8639812 0.8563449 0.8943958 0.9033539 0.9169325 0.9174494 0.9268649 0.9416348 0.9594893 " />
+        <path d="M-51.58,-16.51L-42.25,-12.77L-34.22,-7.20L-28.44,-1.29L-24.13,4.80L-21.02,11.65L-19.34,19.28L-19.02,41.31L-19.88,48.27L-22.00,56.57L-25.52,65.12L-34.28,80.65L-40.05,86.83L-47.69,92.59L-64.67,103.41L-74.03,107.59L-92.61,113.16L-100.36,114.42L-113.56,113.76L-133.02,107.99L-138.58,105.33L-143.56,101.49L-151.45,93.26L-156.10,84.56L-160.67,69.38L-161.61,59.75L-160.81,38.05L-157.50,28.90L-154.31,23.99L-142.63,9.66L-138.25,5.40L-124.19,-4.42L-111.58,-11.31L-98.97,-15.29L-88.95,-16.22L-60.42,-17.29L-51.58,-16.51" stroke-profile="0.9594893 0.9886116 0.9997662 1.012187 1.010669 1.001934 1.065441 1.166635 1.194589 1.193098 1.220403 1.263306 1.271587 1.283605 1.245247 1.217653 1.177689 1.176053 1.179445 1.068587 1.054271 1.065677 1.059772 1.041443 1.045073 1.056953 1.030052 1.010477 0.983442 0.9106472 0.9122428 0.9388047 0.9387572 0.9047241 0.8779981 0.8998226 0.9339372 " />
+        <path d="M-51.58,-16.51L-41.72,-12.84L-35.94,-8.26L-23.59,7.00L-21.14,12.30L-19.88,17.75L-19.61,23.92L-20.81,30.49L-23.20,36.93L-33.48,54.11L-44.36,64.72L-62.94,79.38L-79.74,90.07L-93.67,95.98L-107.74,99.29L-114.89,99.82L-120.67,99.17L-125.85,96.38L-135.27,88.55L-139.64,83.51L-143.63,77.00L-146.49,70.10L-147.86,62.69" stroke-profile="0.9339372 0.9565522 0.9421974 0.9989877 1.068173 1.119477 1.149711 1.145128 1.126389 1.168661 1.21881 1.196156 1.17617 1.212804 1.180524 1.176165 1.180089 1.175242 1.147064 1.082073 1.055535 1.026957 0.9825416 " />
+        <path d="M-147.86,62.69L-147.94,49.54L-142.17,34.01L-137.45,26.24L-124.13,13.30L-114.44,5.94L-104.08,0.43L-94.33,-3.35L-84.70,-5.34L-74.95,-6.07L-65.59,-5.34L-57.83,-2.88L-51.41,0.69L-46.30,4.80L-43.23,9.32L-42.38,15.22L-43.83,22.39L-48.48,31.49L-55.11,41.64L-69.91,58.76L-78.47,66.65L-87.56,73.42L-96.92,78.80L-106.00,82.24L-115.42,83.44L-124.52,82.64L-133.41,78.66L-140.78,73.09L-145.75,67.44L-147.86,62.69" stroke-profile="0.9825416 0.9561705 0.9155868 0.913034 0.8579279 0.8378279 0.8226091 0.8185126 0.7990632 0.8240205 0.8279956 0.8050959 0.7707518 0.7776418 0.7861471 0.7878215 0.7893461 0.798086 0.8424392 0.9771138 1.035752 1.060995 1.098658 1.132878 1.12897 1.09793 1.073506 1.000589 0.9470548 0.8825685 " />
+        <path d="M-147.86,62.69L-148.35,54.18L-146.75,50.06L-135.86,36.40L-126.11,27.96L-115.56,21.13L-103.69,15.82L-91.34,12.30L-79.67,10.98L-70.11,11.11L-62.81,13.70L-58.44,17.36L-56.05,22.07L-56.52,33.01L-61.75,43.03L-71.03,53.78L-82.66,64.92L-94.80,74.29L-109.52,83.24L-114.17,84.49L-122.80,84.96L-129.42,82.84L-133.81,78.53L-135.20,71.95L-133.02,64.00L-120.14,48.00L-102.36,34.81L-89.69,27.96L-77.67,23.85L-65.00,22.47L-60.30,23.59L-58.97,24.91L-58.17,28.50L-60.30,33.61L-68.45,40.97L-73.82,44.57" stroke-profile="0.8825685 0.8224419 0.7914777 0.7722999 0.7507772 0.7247079 0.7038037 0.6945837 0.6649198 0.6834467 0.6922078 0.7427292 0.7868944 0.8315613 0.8727944 0.8925745 0.9183512 0.9694967 1.054858 1.073231 1.084906 1.093399 1.1087 1.052326 0.9511274 0.8557471 0.8217818 0.8182747 0.8191686 0.7400939 0.706856 0.710688 0.7637363 0.8684394 0.9601063 0.963629 " />
+        <path d="M-73.82,44.57L-95.66,58.56L-108.45,65.25L-118.67,68.64L-126.52,68.31L-127.24,64.79L-124.31,59.41L-112.38,48.87L-97.05,42.09L-88.16,40.31L-80.80,39.97L-76.02,40.77L-73.77,43.23L-73.82,44.57" stroke-profile="0.963629 1.023941 0.9986541 1.025021 1.023108 0.989271 0.9326014 0.7885372 0.7375962 0.6700915 0.649221 0.6378599 0.627373 0.6490073 " />
+        <path d="M-73.82,44.57L-73.95,47.60L-78.20,53.58L-85.03,59.75L-91.81,63.67L-97.72,65.32L-105.61,65.19L-109.19,62.60L-110.78,52.97" stroke-profile="0.6490073 0.6980155 0.7837056 0.815496 0.9491274 1.035716 1.095299 1.080626 0.9119452 " />
+        <path d="M-110.78,52.97L-108.33,48.34L-96.25,38.52L-96.25,39.97L-99.24,43.49L-110.78,52.97" stroke-profile="0.9119452 0.7490271 0.6156747 0.6146692 0.6163262 0.6222419 " />
+        <path d="M-110.78,52.97L-120.94,59.61L-130.03,63.60L-140.11,66.12L-148.08,66.79L-153.31,66.05L-156.77,63.20L-158.95,59.16L-160.67,52.38L-163.06,36.86L-156.44,26.11L-143.56,8.99L-139.99,5.74L-131.22,1.16L-128.17,-1.23L-128.70,-2.16L-132.75,-1.96L-141.24,1.36L-147.55,6.00L-151.60,13.04L-159.89,24.05L-162.35,29.36L-163.74,41.77L-162.80,58.82L-157.83,74.81" stroke-profile="0.6222419 0.6389094 0.6849131 0.720123 0.815024 0.8860992 0.9106429 0.9373677 0.9539936 0.9128121 0.8796539 0.9099269 0.910698 0.8804676 0.883087 0.8983118 0.8920763 0.8204758 0.8194994 0.8305278 0.8698878 0.9015712 0.9288967 0.9261513 0.3126791 " />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t1" transform="translate(-57.49 -64.51)" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-225.38,119.73L-229.42,119.80L-232.21,117.87L-232.88,115.15L-230.81,109.78L-224.64,101.61L-214.30,90.94L-190.53,70.76L-177.33,61.68L-163.53,54.05L-150.60,49.20L-138.19,47.34L-125.11,47.27L-111.58,48.60L-82.66,53.45L-39.52,64.79L-23.80,65.25L-7.81,62.27L7.98,56.43L23.25,48.74L39.44,39.72L54.83,29.36L68.77,18.68L80.31,7.20L88.80,-2.55L97.83,-17.16" stroke-profile="0.1 0.1 0.4788519 0.5860153 0.5879375 0.6766267 0.6577763 0.5633662 0.5532277 0.5935037 0.6731539 0.7145886 0.7458407 0.7541124 0.7840751 0.9993939 1.023046 1.03625 1.031679 1.092417 1.140282 1.167729 1.19531 1.199236 1.187793 0.9870617 " />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t2" transform="translate(174.01 148.99) scale(0.71 0.71) rotate(-1.89)" class="thread">
+      <g id="f0" transform="translate(-367.83 -293.44)" style="--index:0; opacity:1;" class="frame">
+        <path d="M-168.52,172.82L-170.56,166.37L-170.56,153.38L-166.99,134.99L-164.27,126.56L-160.61,118.01L-155.44,109.38L-140.64,92.33L-132.22,85.56L-115.36,74.81L-60.75,49.47L-37.59,35.33L-16.70,19.61L0.09,2.82L6.13,-5.54L10.05,-13.97L12.17,-22.20L12.63,-38.58L11.11,-45.62L4.33,-66.99L3.73,-83.71" stroke-profile="0.1 0.4996832 0.6146717 0.8106672 0.8571068 1.023085 1.055117 1.074844 1.10931 1.156877 1.233385 1.353186 1.411035 1.4645 1.469886 1.493073 1.480599 1.435662 1.462053 1.430956 1.251703 " />
+      </g>
+      <g id="f1" transform="translate(-367.83 -293.44)" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" transform="translate(-367.83 -293.44)" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" transform="translate(-367.83 -293.44)" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" transform="translate(-367.83 -293.44)" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" transform="translate(-367.83 -293.44)" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" transform="translate(-367.83 -293.44)" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" transform="translate(-367.83 -293.44)" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" transform="translate(-367.83 -293.44)" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" transform="translate(-367.83 -293.44)" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" transform="translate(-367.83 -293.44)" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" transform="translate(-367.83 -293.44)" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t3" transform="translate(45.76 86.49) scale(0.74 0.74) rotate(-1.65)" class="thread">
+      <g id="f0" transform="translate(-197.50 -198.50)" style="--index:0; opacity:1;" class="frame">
+        <path d="M-168.52,172.82L-170.56,166.37L-170.56,153.38L-166.99,134.99L-164.27,126.56L-160.61,118.01L-155.44,109.38L-140.64,92.33L-132.22,85.56L-115.36,74.81L-60.75,49.47L-37.59,35.33L-16.70,19.61L0.09,2.82L6.13,-5.54L10.05,-13.97L12.17,-22.20L12.63,-38.58L11.11,-45.62L4.33,-66.99L3.73,-83.71" stroke-profile="0.1 0.4996832 0.6146717 0.8106672 0.8571068 1.023085 1.055117 1.074844 1.10931 1.156877 1.233385 1.353186 1.411035 1.4645 1.469886 1.493073 1.480599 1.435662 1.462053 1.430956 1.251703 " />
+      </g>
+      <g id="f1" transform="translate(-197.50 -198.50)" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" transform="translate(-197.50 -198.50)" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" transform="translate(-197.50 -198.50)" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" transform="translate(-197.50 -198.50)" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" transform="translate(-197.50 -198.50)" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" transform="translate(-197.50 -198.50)" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" transform="translate(-197.50 -198.50)" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" transform="translate(-197.50 -198.50)" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" transform="translate(-197.50 -198.50)" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" transform="translate(-197.50 -198.50)" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" transform="translate(-197.50 -198.50)" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t4" transform="translate(146.51 138.49) scale(0.70 0.70) rotate(-3.17)" class="thread">
+      <g id="f0" transform="translate(-362.03 -313.94)" style="--index:0; opacity:1;" class="frame">
+        <path d="M-168.52,172.82L-170.56,166.37L-170.56,153.38L-166.99,134.99L-164.27,126.56L-160.61,118.01L-155.44,109.38L-140.64,92.33L-132.22,85.56L-115.36,74.81L-60.75,49.47L-37.59,35.33L-16.70,19.61L0.09,2.82L6.13,-5.54L10.05,-13.97L12.17,-22.20L12.63,-38.58L11.11,-45.62L4.33,-66.99L3.73,-83.71" stroke-profile="0.1 0.4996832 0.6146717 0.8106672 0.8571068 1.023085 1.055117 1.074844 1.10931 1.156877 1.233385 1.353186 1.411035 1.4645 1.469886 1.493073 1.480599 1.435662 1.462053 1.430956 1.251703 " />
+      </g>
+      <g id="f1" transform="translate(-362.03 -313.94)" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" transform="translate(-362.03 -313.94)" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" transform="translate(-362.03 -313.94)" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" transform="translate(-362.03 -313.94)" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" transform="translate(-362.03 -313.94)" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" transform="translate(-362.03 -313.94)" style="--index:6; opacity:0;" class="frame" />
+      <g id="f7" transform="translate(-362.03 -313.94)" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" transform="translate(-362.03 -313.94)" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" transform="translate(-362.03 -313.94)" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" transform="translate(-362.03 -313.94)" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" transform="translate(-362.03 -313.94)" style="--index:11; opacity:0;" class="frame" />
+    </g>
+  </g>
+</svg>

@@ -1,5 +1,5 @@
 const canvasSketch = require("canvas-sketch");
-const parse = require("./parse-looom-svg");
+const parse = require("../src/parse-looom-svg");
 const createInputEvents = require("simple-input-events");
 const { createRenderer } = require("../src/canvas-rendering");
 
@@ -25,7 +25,7 @@ const settings = {
 
 const sketch = async (props) => {
   const { update, canvas } = props;
-  const resp = await fetch("test/fixtures/testplay2.svg");
+  const resp = await fetch("test/fixtures/testpaths.svg");
   const svgText = await resp.text();
   const weave = parse(svgText);
   const renderWeave = createRenderer(weave);

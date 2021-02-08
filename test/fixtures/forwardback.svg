@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="1024" height="768" viewBox="-512 -384 1024 768" xmlns="http://www.w3.org/2000/svg">
+  <style>
+svg { background-color:#FDDCB1; }
+
+#looom { --version:2; }
+
+#t0 {
+--visible:1; --timeOffset:-12; --speed:4; --bookmarkIndex:-1; --latched:0; --playMode:1; --masked:0; --blendMode:0; --pressureEnabled:1; 
+stroke:#8400F8; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes t0 { 0% { opacity: 1; } 8.333333% { opacity: 0; } }
+#t0 .frame { animation:t0 3s calc(var(--index) * 0.25s) steps(1) infinite; }
+
+#t1 {
+--visible:1; --timeOffset:-9; --speed:4; --bookmarkIndex:-1; --latched:0; --playMode:0; --masked:0; --blendMode:0; --pressureEnabled:1; 
+stroke:#8400F8; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes t1 { 0% { opacity: 1; } 8.333333% { opacity: 0; } }
+#t1 .frame { animation:t1 3s calc(var(--index) * 0.25s) steps(1) infinite; }
+
+#t2 {
+--visible:1; --timeOffset:-9; --speed:4; --bookmarkIndex:-1; --latched:0; --playMode:2; --masked:0; --blendMode:0; --pressureEnabled:1; 
+stroke:#8400F8; stroke-opacity:1; fill-opacity:0; stroke-width:10; stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes t2 { 0% { opacity: 1; } 8.333333% { opacity: 0; } }
+#t2 .frame { animation:t2 3s calc(var(--index) * 0.25s) steps(1) infinite; }
+
+</style>
+  <g id="w0" class="weave">
+    <g id="t0" class="thread">
+      <g id="f0" style="--index:0; opacity:1;" class="frame">
+        <path d="M-204.94,-9.39" stroke-profile="0.2815004 " />
+      </g>
+      <g id="f1" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" style="--index:3; opacity:0;" class="frame" />
+      <g id="f4" style="--index:4; opacity:0;" class="frame" />
+      <g id="f5" style="--index:5; opacity:0;" class="frame" />
+      <g id="f6" style="--index:6; opacity:0;" class="frame">
+        <path d="M-70.97,-105.73L-68.19,-107.12" stroke-profile="0.9316421 0.7991816 " />
+      </g>
+      <g id="f7" style="--index:7; opacity:0;" class="frame">
+        <path d="M-101.30,-84.70L-70.97,-105.73" stroke-profile="0.9769707 0.9316421 " />
+      </g>
+      <g id="f8" style="--index:8; opacity:0;" class="frame">
+        <path d="M-137.39,-58.82L-115.95,-74.94L-101.30,-84.70" stroke-profile="0.9582161 0.9850466 0.9769707 " />
+      </g>
+      <g id="f9" style="--index:9; opacity:0;" class="frame">
+        <path d="M-170.44,-34.47L-150.99,-47.87L-137.39,-58.82" stroke-profile="0.8362805 0.9047828 0.9582161 " />
+      </g>
+      <g id="f10" style="--index:10; opacity:0;" class="frame">
+        <path d="M-195.31,-16.89L-170.44,-34.47" stroke-profile="0.7749977 0.8362805 " />
+      </g>
+      <g id="f11" style="--index:11; opacity:0;" class="frame">
+        <path d="M-204.94,-9.39L-195.31,-16.89" stroke-profile="0.4820689 0.7749977 " />
+      </g>
+    </g>
+    <g id="t1" transform="translate(-36.50 19.25) scale(1.02 1.02) rotate(-3.00)" class="thread">
+      <g id="f0" transform="translate(67.00 11.00)" style="--index:0; opacity:1;" class="frame">
+        <path d="M-70.97,-105.73L-68.19,-107.12" stroke-profile="0.9316421 0.7991816 " />
+      </g>
+      <g id="f1" transform="translate(67.00 11.00)" style="--index:1; opacity:0;" class="frame">
+        <path d="M-101.30,-84.70L-70.97,-105.73" stroke-profile="0.9769707 0.9316421 " />
+      </g>
+      <g id="f2" transform="translate(67.00 11.00)" style="--index:2; opacity:0;" class="frame">
+        <path d="M-137.39,-58.82L-115.95,-74.94L-101.30,-84.70" stroke-profile="0.9582161 0.9850466 0.9769707 " />
+      </g>
+      <g id="f3" transform="translate(67.00 11.00)" style="--index:3; opacity:0;" class="frame">
+        <path d="M-170.44,-34.47L-150.99,-47.87L-137.39,-58.82" stroke-profile="0.8362805 0.9047828 0.9582161 " />
+      </g>
+      <g id="f4" transform="translate(67.00 11.00)" style="--index:4; opacity:0;" class="frame">
+        <path d="M-195.31,-16.89L-170.44,-34.47" stroke-profile="0.7749977 0.8362805 " />
+      </g>
+      <g id="f5" transform="translate(67.00 11.00)" style="--index:5; opacity:0;" class="frame">
+        <path d="M-204.94,-9.39L-195.31,-16.89" stroke-profile="0.4820689 0.7749977 " />
+        <path d="M68.71,-370.63" stroke-profile="0.1 " />
+        <path d="M69.28,-370.46L73.35,-365.80L71.14,-364.75L71.58,-364.46L70.40,-361.91" stroke-profile="0.1014168 0.0006404985 0.0006404985 0.0006403421 0.0006404985 " />
+      </g>
+      <g id="f6" transform="translate(67.00 11.00)" style="--index:6; opacity:0;" class="frame">
+        <path d="M-204.94,-9.39" stroke-profile="0.2815004 " />
+      </g>
+      <g id="f7" transform="translate(67.00 11.00)" style="--index:7; opacity:0;" class="frame" />
+      <g id="f8" transform="translate(67.00 11.00)" style="--index:8; opacity:0;" class="frame" />
+      <g id="f9" transform="translate(67.00 11.00)" style="--index:9; opacity:0;" class="frame" />
+      <g id="f10" transform="translate(67.00 11.00)" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" transform="translate(67.00 11.00)" style="--index:11; opacity:0;" class="frame" />
+    </g>
+    <g id="t2" transform="translate(-41.75 18.75) scale(1.03 1.03) rotate(-4.45)" class="thread">
+      <g id="f0" transform="translate(97.13 42.12)" style="--index:0; opacity:1;" class="frame" />
+      <g id="f1" transform="translate(97.13 42.12)" style="--index:1; opacity:0;" class="frame" />
+      <g id="f2" transform="translate(97.13 42.12)" style="--index:2; opacity:0;" class="frame" />
+      <g id="f3" transform="translate(97.13 42.12)" style="--index:3; opacity:0;" class="frame">
+        <path d="M-70.97,-105.73L-68.19,-107.12" stroke-profile="0.9316421 0.7991816 " />
+      </g>
+      <g id="f4" transform="translate(97.13 42.12)" style="--index:4; opacity:0;" class="frame">
+        <path d="M-101.30,-84.70L-70.97,-105.73" stroke-profile="0.9769707 0.9316421 " />
+      </g>
+      <g id="f5" transform="translate(97.13 42.12)" style="--index:5; opacity:0;" class="frame">
+        <path d="M-137.39,-58.82L-115.95,-74.94L-101.30,-84.70" stroke-profile="0.9582161 0.9850466 0.9769707 " />
+      </g>
+      <g id="f6" transform="translate(97.13 42.12)" style="--index:6; opacity:0;" class="frame">
+        <path d="M-170.44,-34.47L-150.99,-47.87L-137.39,-58.82" stroke-profile="0.8362805 0.9047828 0.9582161 " />
+      </g>
+      <g id="f7" transform="translate(97.13 42.12)" style="--index:7; opacity:0;" class="frame">
+        <path d="M-195.31,-16.89L-170.44,-34.47" stroke-profile="0.7749977 0.8362805 " />
+      </g>
+      <g id="f8" transform="translate(97.13 42.12)" style="--index:8; opacity:0;" class="frame">
+        <path d="M-204.94,-9.39L-195.31,-16.89" stroke-profile="0.4820689 0.7749977 " />
+      </g>
+      <g id="f9" transform="translate(97.13 42.12)" style="--index:9; opacity:0;" class="frame">
+        <path d="M-204.94,-9.39" stroke-profile="0.2815004 " />
+      </g>
+      <g id="f10" transform="translate(97.13 42.12)" style="--index:10; opacity:0;" class="frame" />
+      <g id="f11" transform="translate(97.13 42.12)" style="--index:11; opacity:0;" class="frame" />
+    </g>
+  </g>
+</svg>
