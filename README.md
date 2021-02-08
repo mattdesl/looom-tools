@@ -14,7 +14,7 @@ The current renderer uses Canvas2D, as it seems to be able to achieve feature pa
 
 ## What's Missing / WIP
 
-The website is missing UX/UI and export/playback functionality. The libraries are not yet released on npm, and not yet usable in production. Obviously no docs yet. The path offsetting works very closely to loom, but has a few edge cases where it results in different line thicknesses. Otherwise, most of the files seem to be rendering very closely to the Looom application.
+The website is missing UX/UI and export/playback functionality. The libraries are not yet released on npm, and not yet usable in production. Obviously no docs yet. The path offsetting works very closely to loom, but has a few edge cases where it results in different line thicknesses. Otherwise, most of the files seem to be rendering very closely to the Looom application. If you see any differences from your files, please open an issue or DM me on Twitter.
 
 ## Extra Features
 
