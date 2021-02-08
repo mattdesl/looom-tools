@@ -46,6 +46,12 @@
     foreground = bestForeground(color);
     document.body.style.backgroundColor = background;
     document.body.style.color = foreground;
+    const corner = document.querySelector(".github-corner svg");
+    if (corner) {
+      corner.style.fill = foreground;
+      corner.style.opacity = 0.5;
+      corner.style.color = background;
+    }
   }
 
   function bestForeground(color) {

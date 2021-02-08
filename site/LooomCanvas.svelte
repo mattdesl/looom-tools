@@ -30,9 +30,15 @@
     time = 0;
     if (data) {
       try {
-        weave = parseLooom(data, {
-          recenter,
-        });
+        try {
+          weave = parseLooom(data, {
+            recenter,
+          });
+        } catch (err) {
+          console.error(err);
+          // mask huge SVG error
+          throw new Error(`Could not parse SVG data from file`);
+        }
         if (weave.version !== "2") {
           throw new Error(
             `Only supports weave version 2 files, got ${weave.version}`
