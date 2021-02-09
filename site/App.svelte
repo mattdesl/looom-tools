@@ -8,7 +8,22 @@
   import Random from "canvas-sketch-util/random";
   import dragDrop from "drag-drop";
   import initialSVGUrl from "../test/fixtures/Earthy1.svg";
+  import Settings from "./Settings.svelte";
 
+  let settings = {
+    // width: 1024,
+    // height: 768,
+    // sizing: "custom",
+    // recenter: false,
+    // resamplePaths: false,
+    // duration: 4,
+    // fps: 30,
+    // running: false,
+    // format: "gif", // json, mp4, gif, png, jpg
+    // preset: "high",
+  };
+
+  let showSettings = true;
   let svg;
   let foreground, background;
   let initialBackground = Color.parse({
@@ -41,15 +56,16 @@
     });
   }
 
-  function setBackground(color) {
-    background = color;
+  function setBackground(color, blending) {
     foreground = bestForeground(color);
+    background = blending ? Color.blend(color, foreground, 0.1).hex : color;
+    foreground = Color.blend(foreground, color, 0.15).hex;
     document.body.style.backgroundColor = background;
     document.body.style.color = foreground;
     const corner = document.querySelector(".github-corner svg");
     if (corner) {
-      corner.style.fill = foreground;
-      corner.style.opacity = 0.5;
+      corner.style.fill = Color.blend(foreground, color, 0.5).hex;
+      corner.style.opacity = 1;
       corner.style.color = background;
     }
   }
@@ -64,15 +80,33 @@
 <main>
   <div class="canvas-container">
     <LooomCanvas
+      bind:resamplePaths={settings.resamplePaths}
+      bind:running={settings.running}
+      bind:sizing={settings.sizing}
+      bind:customWidth={settings.width}
+      bind:customHeight={settings.height}
       on:load={({ detail: weave }) => {
-        if (weave) setBackground(weave.backgroundColor);
-        else setBackground(initialBackground);
+        if (weave) {
+          setBackground(weave.backgroundColor, true);
+        } else setBackground(initialBackground, true);
       }}
       data={svg}
     />
   </div>
   <div class="content">
-    <nav />
+    <nav>
+      <button>SETTINGS</button>
+      <button>RECORD</button>
+      {#if showSettings}
+        <Settings
+          bind:resamplePaths={settings.resamplePaths}
+          bind:running={settings.running}
+          bind:sizing={settings.sizing}
+          bind:customWidth={settings.width}
+          bind:customHeight={settings.height}
+        />
+      {/if}
+    </nav>
     <div class="info">
       <p>
         Drag and drop a <a target="_blank" href="https://iorama.studio/"

@@ -2,6 +2,8 @@
   import parseLooom from "../src/parse-looom-svg";
   import { createRenderer } from "../src/canvas-rendering";
   import { createEventDispatcher, onMount } from "svelte";
+  import objectFit from "../src/util/fit";
+
   import rightNow from "right-now";
 
   export let data = null;
@@ -12,7 +14,14 @@
   export let fitScale = 1;
   export let fitX = 0.5;
   export let fitY = 0.5;
-  export let matchWeaveSize = false;
+  export let running = true;
+
+  const MAX_SIZE = 4096 * 4;
+
+  // Size mode: 'weave', 'window', 'custom'
+  export let sizing = "weave";
+  export let customWidth = 1024;
+  export let customHeight = 768;
 
   const dispatcher = createEventDispatcher();
   let width, height, pixelRatio;
@@ -23,12 +32,14 @@
   let lastTime;
   let time = 0;
 
-  $: reparse(data);
+  $: resamplePaths, refit, fitX, fitY, fitScale, fit, reparse(data);
+  $: sizing, customWidth, customHeight, resize();
 
   function reparse(data) {
     lastTime = rightNow();
     time = 0;
     if (data) {
+      console.log("Parsing");
       try {
         try {
           weave = parseLooom(data, {
@@ -62,21 +73,26 @@
     } else {
       weave = renderWeave = null;
     }
-    if (canvas && matchWeaveSize) resize();
+    if (canvas) resize();
     dispatcher("load", weave);
   }
 
   onMount(() => {
     context = canvas.getContext("2d");
     resize();
+    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("orientationchange", resize, { passive: true });
     raf = window.requestAnimationFrame(animate);
     return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("orientationchange", resize);
       window.cancelAnimationFrame(raf);
     };
   });
 
   function animate() {
     raf = window.requestAnimationFrame(animate);
+
     let now = rightNow();
     const dt = (now - lastTime) / 1000;
 
@@ -86,7 +102,7 @@
     context.clearRect(0, 0, width, height);
 
     if (renderWeave) {
-      time += dt;
+      if (running) time += dt;
       renderWeave(context, { width, height, time });
     }
 
@@ -95,24 +111,71 @@
     lastTime = now;
   }
 
+  function userSize(n) {
+    if (isFinite(n) && n >= 2 && n <= MAX_SIZE) return n;
+    return 1024; // default size
+  }
+
   function resize() {
-    if (matchWeaveSize && weave) {
-      width = weave.width;
-      height = weave.height;
-      pixelRatio = 1;
+    if (!canvas) return;
+
+    const innerWidth = window.innerWidth;
+    const innerHeight = window.innerHeight;
+
+    let tx = 0;
+    let ty = 0;
+    let styleWidth, styleHeight;
+    if (sizing === "window") {
+      pixelRatio = Math.min(2, window.devicePixelRatio || 1);
+      width = innerWidth;
+      height = innerHeight;
+      styleWidth = width;
+      styleHeight = height;
     } else {
-      pixelRatio = window.devicePixelRatio || 1;
-      width = window.innerWidth;
-      height = window.innerHeight;
+      pixelRatio = 1;
+
+      if (sizing === "weave" && weave) {
+        width = weave.width;
+        height = weave.height;
+      } else {
+        width = userSize(customWidth);
+        height = userSize(customHeight);
+      }
+
+      const fitted = objectFit({
+        parentWidth: innerWidth,
+        parentHeight: innerHeight,
+        fit: "contain",
+        scale: 0.8,
+        childWidth: width,
+        childHeight: height,
+      });
+      tx = fitted[0];
+      ty = fitted[1];
+      styleWidth = fitted[2];
+      styleHeight = fitted[3];
     }
+
     const canvasWidth = Math.floor(width * pixelRatio);
     const canvasHeight = Math.floor(height * pixelRatio);
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.style.position = `relative`;
+    canvas.style.left = `${tx}px`;
+    canvas.style.top = `${ty}px`;
+    canvas.style.width = `${styleWidth}px`;
+    canvas.style.height = `${styleHeight}px`;
   }
 </script>
 
-<canvas bind:this={canvas} />
-<svelte:window on:resize|passive={resize} />
+<div class="looom-container">
+  <canvas bind:this={canvas} />
+</div>
+
+<style>
+  .looom-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+</style>
