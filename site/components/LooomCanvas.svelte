@@ -1,10 +1,13 @@
 <script>
-  import parseLooom from "../src/parse-looom-svg";
-  import { createRenderer } from "../src/canvas-rendering";
+  import parseLooom from "../../src/parse-looom-svg";
+  import { createRenderer } from "../../src/canvas-rendering";
   import { createEventDispatcher, onMount } from "svelte";
-  import objectFit from "../src/util/fit";
+  import objectFit from "../../src/util/fit";
+  import createRecording from "./record";
 
   import rightNow from "right-now";
+
+  const MAX_SIZE = 4096 * 4;
 
   export let data = null;
   export let recenter = false;
@@ -15,13 +18,17 @@
   export let fitX = 0.5;
   export let fitY = 0.5;
   export let running = true;
-
-  const MAX_SIZE = 4096 * 4;
+  export let recording = false;
 
   // Size mode: 'weave', 'window', 'custom'
   export let sizing = "weave";
   export let customWidth = 1024;
   export let customHeight = 768;
+
+  export let fps = 30;
+  export let duration = 5;
+  export let qualityPreset = "high";
+  export let time = 0;
 
   const dispatcher = createEventDispatcher();
   let width, height, pixelRatio;
@@ -30,10 +37,32 @@
   let canvas, context;
   let raf;
   let lastTime;
-  let time = 0;
+  let _isRunning = false;
+  let _isRecording = false;
+  let currentRecorder;
+
+  const download = (buf, filename) => {
+    const url = URL.createObjectURL(new Blob([buf], { type: "video/mp4" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+  };
 
   $: resamplePaths, refit, fitX, fitY, fitScale, fit, reparse(data);
   $: sizing, customWidth, customHeight, resize();
+
+  $: {
+    if (recording) {
+      stopLoop();
+    } else {
+      if (running) startLoop();
+      else stopLoop();
+    }
+
+    if (recording) startRecord();
+    else stopRecord();
+  }
 
   function reparse(data) {
     lastTime = rightNow();
@@ -82,33 +111,85 @@
     resize();
     window.addEventListener("resize", resize, { passive: true });
     window.addEventListener("orientationchange", resize, { passive: true });
-    raf = window.requestAnimationFrame(animate);
     return () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("orientationchange", resize);
-      window.cancelAnimationFrame(raf);
+      stopLoop();
     };
   });
+
+  function startRecord() {
+    if (_isRecording) return;
+    _isRecording = true;
+    console.log("start record");
+    const w = parseInt(canvas.width, 10);
+    const h = parseInt(canvas.height, 10);
+    let curTime = 0;
+    const drawFrame = (dt) => {
+      curTime += dt;
+      redrawWithTime(curTime);
+      const img = context.getImageData(0, 0, w, h);
+      return img.data;
+    };
+    currentRecorder = createRecording(canvas, drawFrame, {
+      width: w,
+      height: h,
+      duration,
+      fps,
+      qualityPreset,
+    });
+    currentRecorder.ready.then((buf) => {
+      download(buf, "animation.mp4");
+      _isRecording = false;
+      recording = false;
+      currentRecorder = null;
+    });
+  }
+
+  function stopRecord() {
+    if (!_isRecording) return;
+    console.log("stop record");
+    _isRecording = false;
+  }
+
+  function startLoop() {
+    if (_isRunning) return;
+    raf = window.requestAnimationFrame(animate);
+    _isRunning = true;
+  }
+
+  function stopLoop() {
+    _isRunning = false;
+    if (raf != null) {
+      window.cancelAnimationFrame(raf);
+      raf = null;
+    }
+  }
 
   function animate() {
     raf = window.requestAnimationFrame(animate);
 
     let now = rightNow();
     const dt = (now - lastTime) / 1000;
+    if (running && _isRunning) time += dt;
 
-    context.save();
-
-    context.scale(pixelRatio, pixelRatio);
-    context.clearRect(0, 0, width, height);
-
-    if (renderWeave) {
-      if (running) time += dt;
-      renderWeave(context, { width, height, time });
-    }
-
-    context.restore();
+    redraw();
 
     lastTime = now;
+  }
+
+  function redraw() {
+    redrawWithTime(time);
+  }
+
+  function redrawWithTime(curTime = 0) {
+    context.save();
+    context.scale(pixelRatio, pixelRatio);
+    context.clearRect(0, 0, width, height);
+    if (renderWeave) {
+      renderWeave(context, { width, height, time: curTime });
+    }
+    context.restore();
   }
 
   function userSize(n) {
@@ -165,6 +246,7 @@
     canvas.style.top = `${ty}px`;
     canvas.style.width = `${styleWidth}px`;
     canvas.style.height = `${styleHeight}px`;
+    if (!_isRunning) redraw();
   }
 </script>
 

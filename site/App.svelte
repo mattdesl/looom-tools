@@ -2,28 +2,24 @@
   // const parse = require("../src/parse-looom-svg");
   // const { createRenderer } = require("../src/canvas-rendering");
 
-  import LooomCanvas from "./LooomCanvas.svelte";
+  import LooomCanvas from "./components/LooomCanvas.svelte";
 
   import Color from "canvas-sketch-util/color";
   import Random from "canvas-sketch-util/random";
   import dragDrop from "drag-drop";
   import initialSVGUrl from "../test/fixtures/Earthy1.svg";
-  import Settings from "./Settings.svelte";
+  import Settings from "./components/Settings.svelte";
+  import ToggleButton from "./components/ToggleButton.svelte";
 
-  let settings = {
-    // width: 1024,
-    // height: 768,
-    // sizing: "custom",
-    // recenter: false,
-    // resamplePaths: false,
-    // duration: 4,
-    // fps: 30,
-    // running: false,
-    // format: "gif", // json, mp4, gif, png, jpg
-    // preset: "high",
-  };
+  let settings = {};
 
-  let showSettings = true;
+  let running = true;
+  let recording = false;
+  let showSettings = false;
+  let progress = 0;
+
+  $: if (recording) showSettings = false;
+
   let svg;
   let foreground, background;
   let initialBackground = Color.parse({
@@ -80,11 +76,19 @@
 <main>
   <div class="canvas-container">
     <LooomCanvas
-      bind:resamplePaths={settings.resamplePaths}
-      bind:running={settings.running}
-      bind:sizing={settings.sizing}
-      bind:customWidth={settings.width}
-      bind:customHeight={settings.height}
+      resamplePaths={settings.resamplePaths}
+      recenter={settings.recenter}
+      fps={settings.fps}
+      duration={settings.duration}
+      qualityPreset={settings.qualityPreset}
+      bind:running
+      bind:recording
+      sizing={settings.sizing}
+      customWidth={settings.width}
+      customHeight={settings.height}
+      on:progress={(v) => {
+        progress = progress;
+      }}
       on:load={({ detail: weave }) => {
         if (weave) {
           setBackground(weave.backgroundColor, true);
@@ -95,16 +99,28 @@
   </div>
   <div class="content">
     <nav>
-      <button>SETTINGS</button>
-      <button>RECORD</button>
+      <ToggleButton enabled={!recording} bind:value={showSettings}
+        >{showSettings ? "^" : "v"}</ToggleButton
+      >
+      <ToggleButton enabled={!recording} bind:value={running}
+        >{running ? "Pause" : "Play"}</ToggleButton
+      >
+      <ToggleButton bind:value={recording}
+        >{recording ? "Stop" : "Record"}</ToggleButton
+      >
       {#if showSettings}
         <Settings
+          bind:duration={settings.duration}
+          bind:fps={settings.fps}
+          bind:qualityPreset={settings.qualityPreset}
           bind:resamplePaths={settings.resamplePaths}
-          bind:running={settings.running}
           bind:sizing={settings.sizing}
-          bind:customWidth={settings.width}
-          bind:customHeight={settings.height}
+          bind:width={settings.width}
+          bind:height={settings.height}
         />
+      {/if}
+      {#if recording}
+        <div>{progress}</div>
       {/if}
     </nav>
     <div class="info">
