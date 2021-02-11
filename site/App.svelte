@@ -10,15 +10,24 @@
   import initialSVGUrl from "../test/fixtures/Earthy1.svg";
   import Settings from "./components/Settings.svelte";
   import ToggleButton from "./components/ToggleButton.svelte";
+  import Progress from "./components/Progress.svelte";
 
   let settings = {};
 
   let running = true;
   let recording = false;
   let showSettings = false;
-  let progress = 0;
+  let progress = 0.0;
+  let pass = 0;
+  let totalPasses = 1;
 
-  $: if (recording) showSettings = false;
+  $: {
+    if (recording) showSettings = false;
+    else {
+      progress = pass = 0;
+      totalPasses = 1;
+    }
+  }
 
   let svg;
   let foreground, background;
@@ -81,13 +90,16 @@
       fps={settings.fps}
       duration={settings.duration}
       qualityPreset={settings.qualityPreset}
+      format={settings.format}
       bind:running
       bind:recording
       sizing={settings.sizing}
       customWidth={settings.width}
       customHeight={settings.height}
-      on:progress={(v) => {
-        progress = progress;
+      on:recordProgress={({ detail }) => {
+        progress = detail.progress;
+        totalPasses = detail.totalPasses;
+        pass = detail.pass;
       }}
       on:load={({ detail: weave }) => {
         if (weave) {
@@ -99,44 +111,64 @@
   </div>
   <div class="content">
     <nav>
-      <ToggleButton enabled={!recording} bind:value={showSettings}
-        >{showSettings ? "^" : "v"}</ToggleButton
-      >
-      <ToggleButton enabled={!recording} bind:value={running}
-        >{running ? "Pause" : "Play"}</ToggleButton
-      >
-      <ToggleButton bind:value={recording}
-        >{recording ? "Stop" : "Record"}</ToggleButton
-      >
-      {#if showSettings}
-        <Settings
-          bind:duration={settings.duration}
-          bind:fps={settings.fps}
-          bind:qualityPreset={settings.qualityPreset}
-          bind:resamplePaths={settings.resamplePaths}
-          bind:sizing={settings.sizing}
-          bind:width={settings.width}
-          bind:height={settings.height}
-        />
-      {/if}
+      <ToggleButton
+        color={foreground}
+        enabled={!recording}
+        bind:value={showSettings}
+        svg={showSettings ? "settings-open" : "settings"}
+      />
+      <ToggleButton
+        color={foreground}
+        enabled={!recording}
+        bind:value={running}
+        svg={running ? "player-pause" : "player-play"}
+      />
+      <ToggleButton
+        color={foreground}
+        bind:value={recording}
+        svg={recording ? "player-recording" : "player-record"}
+      />
       {#if recording}
-        <div>{progress}</div>
+        <Progress {progress} color={foreground} />
+        {#if totalPasses > 1}
+          <div class="pass">{pass + 1} / {totalPasses}</div>
+        {/if}
       {/if}
     </nav>
     <div class="info">
-      <p>
-        Drag and drop a <a target="_blank" href="https://iorama.studio/"
-          >Looom</a
-        >
-        SVG file into this window to view it. Export features still WIP.
-      </p>
-      <p>
-        Web renderer by <a href="https://twitter.com/mattdesl" target="_blank"
-          >@mattdesl</a
-        >.
-      </p>
+      <div>
+        <p>
+          Drag and drop a <a target="_blank" href="https://iorama.studio/"
+            >Looom</a
+          >
+          SVG file into this window to export it.
+        </p>
+      </div>
+      <div>
+        <p>
+          Web renderer and exporter by <a
+            href="https://twitter.com/mattdesl"
+            target="_blank">@mattdesl</a
+          >.
+        </p>
+      </div>
     </div>
   </div>
+  {#if showSettings}
+    <div class="settings-popup">
+      <Settings
+        bind:duration={settings.duration}
+        bind:fps={settings.fps}
+        bind:recenter={settings.recenter}
+        bind:format={settings.format}
+        bind:qualityPreset={settings.qualityPreset}
+        bind:resamplePaths={settings.resamplePaths}
+        bind:sizing={settings.sizing}
+        bind:width={settings.width}
+        bind:height={settings.height}
+      />
+    </div>
+  {/if}
 </main>
 
 <style>
@@ -168,9 +200,29 @@
   nav {
     height: 32px;
     width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
   }
   .info {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
     padding: 20px;
+  }
+  .settings-popup {
+    display: block;
+    position: absolute;
+    top: 52px;
+    left: 18px;
+  }
+  .pass {
+    font-size: 10px;
+    margin-left: 10px;
   }
   .content {
     width: 100%;

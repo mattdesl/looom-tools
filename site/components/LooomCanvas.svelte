@@ -25,10 +25,12 @@
   export let customWidth = 1024;
   export let customHeight = 768;
 
+  export let format = "mp4";
   export let fps = 30;
   export let duration = 5;
   export let qualityPreset = "high";
   export let time = 0;
+  export let scaleToView = true;
 
   const dispatcher = createEventDispatcher();
   let width, height, pixelRatio;
@@ -41,15 +43,19 @@
   let _isRecording = false;
   let currentRecorder;
 
-  const download = (buf, filename) => {
-    const url = URL.createObjectURL(new Blob([buf], { type: "video/mp4" }));
+  let frameElapsed;
+  let frameLastTime;
+
+  const download = (buf, filename, type) => {
+    const blob = buf instanceof Blob ? buf : new Blob([buf], { type });
+    const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.download = filename;
     anchor.click();
   };
 
-  $: resamplePaths, refit, fitX, fitY, fitScale, fit, reparse(data);
+  $: recenter, resamplePaths, refit, fitX, fitY, fitScale, fit, reparse(data);
   $: sizing, customWidth, customHeight, resize();
 
   $: {
@@ -65,7 +71,6 @@
   }
 
   function reparse(data) {
-    lastTime = rightNow();
     time = 0;
     if (data) {
       console.log("Parsing");
@@ -121,6 +126,8 @@
   function startRecord() {
     if (_isRecording) return;
     _isRecording = true;
+    resize(); // stop scaling to view
+    redraw(); // force redraw so we don't see any missed frames
     console.log("start record");
     const w = parseInt(canvas.width, 10);
     const h = parseInt(canvas.height, 10);
@@ -129,31 +136,56 @@
       curTime += dt;
       redrawWithTime(curTime);
       const img = context.getImageData(0, 0, w, h);
-      return img.data;
+      return img;
     };
+    dispatcher("recordStart");
+    const ext = format === "mp4" ? ".mp4" : ".gif";
+    const type = format === "mp4" ? "video/mp4" : "image/gif";
+    const filename = `animation${ext}`;
     currentRecorder = createRecording(canvas, drawFrame, {
+      progress(opts) {
+        dispatcher("recordProgress", opts);
+      },
       width: w,
       height: h,
       duration,
       fps,
+      format,
       qualityPreset,
     });
+    const startTime = rightNow();
     currentRecorder.ready.then((buf) => {
-      download(buf, "animation.mp4");
+      if (buf) {
+        const endTime = rightNow();
+        console.log("Finished in", endTime - startTime, "ms");
+        dispatcher("recordSuccess");
+        download(buf, filename, type);
+      } else {
+        dispatcher("recordCancel");
+      }
+      resize(); // scale back to view
       _isRecording = false;
       recording = false;
       currentRecorder = null;
+      dispatcher("recordFinish");
     });
   }
 
   function stopRecord() {
     if (!_isRecording) return;
     console.log("stop record");
+    if (currentRecorder) {
+      currentRecorder.cancel();
+      currentRecorder = null;
+    }
     _isRecording = false;
   }
 
   function startLoop() {
     if (_isRunning) return;
+    const now = rightNow();
+    lastTime = now;
+    frameLastTime = now;
     raf = window.requestAnimationFrame(animate);
     _isRunning = true;
   }
@@ -173,7 +205,20 @@
     const dt = (now - lastTime) / 1000;
     if (running && _isRunning) time += dt;
 
-    redraw();
+    let newFrame = false;
+    const fpsInterval = 1000 / fps;
+    frameElapsed = now - frameLastTime;
+    if (frameElapsed > fpsInterval) {
+      frameLastTime = now - (frameElapsed % fpsInterval);
+      newFrame = true;
+    }
+
+    // don't throttle any frames at 60+
+    if (fps >= 60) newFrame = true;
+
+    if (!_isRecording && newFrame) {
+      redraw();
+    }
 
     lastTime = now;
   }
@@ -237,6 +282,14 @@
       styleHeight = fitted[3];
     }
 
+    // If we aren't recording and we are supposed to scale
+    // to the browser view for faster rendering, let's do that here
+    if (scaleToView && !_isRecording) {
+      width = styleWidth;
+      height = styleHeight;
+      pixelRatio = Math.min(2, window.devicePixelRatio);
+    }
+
     const canvasWidth = Math.floor(width * pixelRatio);
     const canvasHeight = Math.floor(height * pixelRatio);
     canvas.width = canvasWidth;
@@ -246,7 +299,7 @@
     canvas.style.top = `${ty}px`;
     canvas.style.width = `${styleWidth}px`;
     canvas.style.height = `${styleHeight}px`;
-    if (!_isRunning) redraw();
+    if (!_isRecording) redraw();
   }
 </script>
 

@@ -44,6 +44,7 @@
     duration: 250,
   }}
 >
+  <!-- <header>Export Settings</header> -->
   <Checkbox label="Resample Paths" bind:value={resamplePaths} />
   <Checkbox label="Recenter" bind:value={recenter} />
   <Select
@@ -59,7 +60,7 @@
     <Vector
       type="size"
       label="Dimensions"
-      min={2}
+      min={1}
       max={4096 * 4}
       step={1}
       draggable={false}
@@ -74,6 +75,7 @@
       type="array"
       label="Duration"
       min={0.5}
+      draggable={false}
       max={50000}
       step={0.1}
       units="seconds"
@@ -107,6 +109,7 @@
 
 <style>
   .settings {
+    color: black;
     position: relative;
     width: 300px;
     /* height: 400px; */

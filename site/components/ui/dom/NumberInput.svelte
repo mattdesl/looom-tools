@@ -2,13 +2,6 @@
   import { onMount } from "svelte";
   import simpleInput from "simple-input-events";
 
-  function roundToDecimals(value, decimals) {
-    return Number(value.toFixed(decimals));
-    // const dec = Number("1e-" + decimals);
-    // if (value <= dec) return value;
-    // return Number(Math.round(value + "e" + decimals) + "e-" + decimals);
-  }
-
   export let min = undefined;
   export let max = undefined;
   export let step = undefined;
@@ -17,6 +10,19 @@
   export let round = true;
   export let fullWidth = false;
   export let draggable = true;
+
+  function roundToDecimals(value, decimals) {
+    if (isNaN(value) || value === Number.NEGATIVE_INFINITY) {
+      return min;
+    }
+    if (value === Number.POSITIVE_INFINITY) {
+      return max;
+    }
+    return Number(value.toFixed(decimals));
+    // const dec = Number("1e-" + decimals);
+    // if (value <= dec) return value;
+    // return Number(Math.round(value + "e" + decimals) + "e-" + decimals);
+  }
 
   $: {
     if (min != null && isFinite(min)) {
