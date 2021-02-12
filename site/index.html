@@ -18,17 +18,15 @@
   </style>
    
    <script type='module'>
-    import { simd } from "https://unpkg.com/wasm-feature-detect@1.2.9/dist/esm/index.js?module";
-    import loadEncoder from "https://unpkg.com/mp4-h264@1.0.8/build/mp4-encoder.js";
-    let promise;
-    window.getMP4H264 = async function loadMP4H264Module () {
-      if (promise) return promise;
-      promise = simd().then(isSIMD => loadEncoder({
-        simd: isSIMD
-      }));
-      return promise;
-    };
+     let promise;
+     window.loadMP4Module = function loadMP4Module (opts) {
+       if (promise) return promise;
+       promise = import('https://unpkg.com/mp4-wasm@1.0.1/build/mp4.js').then(Module => {
+         return Module.default(opts);
+       });
+       return promise;
+     }
    </script>
-   <script src="index.js"></script>
+   <script src="index.js" async></script>
 </body>
 </html>

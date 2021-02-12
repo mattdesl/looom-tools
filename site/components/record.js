@@ -1,6 +1,10 @@
 import GIF from "../vendor/gif.js";
 import workerScript from "../vendor/gif.worker.js.as-url";
 
+export function isWebCodecsSupported() {
+  return typeof window.VideoEncoder === "function";
+}
+
 export default function createRecorder(canvas, render, opts = {}) {
   const {
     duration = 5,
@@ -51,7 +55,10 @@ export default function createRecorder(canvas, render, opts = {}) {
 
   function getEncoder() {
     if (format === "mp4") {
-      return window.getMP4H264().then((Encoder) => MP4Encoder(Encoder));
+      if (!isWebCodecsSupported()) {
+        throw new Error("format { mp4 } but WebCodecs is not supported");
+      }
+      return window.loadMP4Module().then((MP4) => MP4Encoder(MP4));
     } else {
       return Promise.resolve(GIFEncoder());
     }
@@ -70,12 +77,12 @@ export default function createRecorder(canvas, render, opts = {}) {
     }
   }
 
-  function tick() {
+  async function tick() {
     if (cancelled) return;
     if (frameIndex < totalFrames) {
       // console.log("Rendering Frame %d / %d", frameIndex + 1, totalFrames);
       const imgData = render(fpsInterval);
-      encoder.addFrame(imgData);
+      await encoder.addFrame(imgData);
       progress({
         progress: frameIndex / totalFrames,
         totalFrames,
@@ -92,21 +99,23 @@ export default function createRecorder(canvas, render, opts = {}) {
     }
   }
 
-  function MP4Encoder(Encoder) {
-    const encoder = Encoder.create({
+  function MP4Encoder(MP4) {
+    const encoder = MP4.createWebCodecsEncoder({
       width,
       height,
       fps,
-      stride: 4,
     });
     return {
-      addFrame(imageData) {
-        encoder.encodeRGB(imageData.data);
+      async addFrame(imageData) {
+        // Create a bitmap out of the frame
+        const bitmap = await createImageBitmap(imageData);
+
+        // Add bitmap to encoder
+        await encoder.addFrame(bitmap);
       },
       cancel() {},
       async end() {
-        const buf = encoder.end();
-        return buf;
+        return encoder.end();
       },
     };
   }
@@ -141,7 +150,7 @@ export default function createRecorder(canvas, render, opts = {}) {
     });
 
     return {
-      addFrame(imageData) {
+      async addFrame(imageData) {
         gif.addFrame(imageData, { delay: fpsInterval * 1000 });
       },
       cancel() {},

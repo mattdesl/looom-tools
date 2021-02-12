@@ -23,10 +23,8 @@
   export let height = 768;
   export let sizing = "weave";
   export let recording = false;
-
+  export let formats = ["mp4", "gif"];
   export let format = "mp4";
-
-  const movieFormats = ["mp4", "gif"];
 
   // for movie
   export let duration = 5;
@@ -69,8 +67,8 @@
       units="px"
     />
   {/if}
-  <Select label="Format" bind:value={format} options={["mp4", "gif"]} />
-  {#if movieFormats.includes(format)}
+  <Select label="Format" bind:value={format} options={formats} />
+  {#if formats.includes(format)}
     <Vector
       type="array"
       label="Duration"

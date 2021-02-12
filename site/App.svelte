@@ -11,8 +11,15 @@
   import Settings from "./components/Settings.svelte";
   import ToggleButton from "./components/ToggleButton.svelte";
   import Progress from "./components/Progress.svelte";
+  import { isWebCodecsSupported } from "./components/record";
 
-  let settings = {};
+  const hasMP4 = isWebCodecsSupported();
+  const initialFormat = hasMP4 ? "mp4" : "gif";
+  const formats = hasMP4 ? ["mp4", "gif"] : ["gif"];
+
+  let settings = {
+    format: initialFormat,
+  };
 
   let running = true;
   let recording = false;
@@ -161,6 +168,7 @@
         bind:fps={settings.fps}
         bind:recenter={settings.recenter}
         bind:format={settings.format}
+        {formats}
         bind:qualityPreset={settings.qualityPreset}
         bind:resamplePaths={settings.resamplePaths}
         bind:sizing={settings.sizing}
