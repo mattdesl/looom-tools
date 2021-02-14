@@ -79,7 +79,10 @@
   {#if showFormatInfo}
     <Prop>
       <div class="format-info">
-        See <a href="#">here</a> to enable other video formats.
+        See <a
+          href="https://github.com/mattdesl/looom-tools/blob/main/docs/formats.md"
+          >here</a
+        > for enabling other video formats.
       </div>
     </Prop>
   {/if}

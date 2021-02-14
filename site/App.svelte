@@ -16,8 +16,10 @@
   const hasMP4 = isWebCodecsSupported();
   const hasWebM = isWebMSupported();
   let formats = ["gif"];
-  if (hasWebM) formats.unshift("webm");
-  if (hasMP4) formats.unshift("mp4");
+  if (hasWebM) formats.push("webm");
+  if (hasMP4) formats.push("mp4");
+
+  const hasAllFormats = hasMP4 && hasWebM;
 
   const initialFormat = formats[0];
 
@@ -173,6 +175,7 @@
         bind:recenter={settings.recenter}
         bind:format={settings.format}
         {formats}
+        showFormatInfo={!hasAllFormats}
         bind:qualityPreset={settings.qualityPreset}
         bind:resamplePaths={settings.resamplePaths}
         bind:sizing={settings.sizing}
