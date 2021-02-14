@@ -80,6 +80,7 @@
     <Prop>
       <div class="format-info">
         See <a
+          target="_blank"
           href="https://github.com/mattdesl/looom-tools/blob/main/docs/formats.md"
           >here</a
         > for enabling other video formats.
