@@ -139,8 +139,12 @@
       return img;
     };
     dispatcher("recordStart");
-    const ext = format === "mp4" ? ".mp4" : ".gif";
-    const type = format === "mp4" ? "video/mp4" : "image/gif";
+    const formats = {
+      mp4: { ext: ".mp4", type: "video/mp4" },
+      gif: { ext: ".gif", type: "image/gif" },
+      webm: { ext: ".webm", type: "video/webm" },
+    };
+    const { ext, type } = formats[format];
     const filename = `animation${ext}`;
     currentRecorder = createRecording(canvas, drawFrame, {
       progress(opts) {

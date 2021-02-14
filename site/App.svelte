@@ -11,11 +11,15 @@
   import Settings from "./components/Settings.svelte";
   import ToggleButton from "./components/ToggleButton.svelte";
   import Progress from "./components/Progress.svelte";
-  import { isWebCodecsSupported } from "./components/record";
+  import { isWebCodecsSupported, isWebMSupported } from "./components/record";
 
   const hasMP4 = isWebCodecsSupported();
-  const initialFormat = hasMP4 ? "mp4" : "gif";
-  const formats = hasMP4 ? ["mp4", "gif"] : ["gif"];
+  const hasWebM = isWebMSupported();
+  let formats = ["gif"];
+  if (hasWebM) formats.unshift("webm");
+  if (hasMP4) formats.unshift("mp4");
+
+  const initialFormat = formats[0];
 
   let settings = {
     format: initialFormat,

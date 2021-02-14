@@ -3,6 +3,7 @@
 
   import Checkbox from "./ui/Checkbox.svelte";
   import NumberSpinner from "./ui/Number.svelte";
+  import Prop from "./ui/Prop.svelte";
   import Select from "./ui/Select.svelte";
   import Vector from "./ui/Vector.svelte";
   // {
@@ -22,7 +23,7 @@
   export let width = 1024;
   export let height = 768;
   export let sizing = "weave";
-  export let recording = false;
+  export let showFormatInfo = true;
   export let formats = ["mp4", "gif"];
   export let format = "mp4";
 
@@ -34,6 +35,13 @@
   // for still
   export let time = 0;
 </script>
+
+<!-- 
+      <Select
+      label="Quality"
+      bind:value={qualityPreset}
+      options={["high", "medium", "low"]}
+    /> -->
 
 <div
   class="settings"
@@ -68,6 +76,13 @@
     />
   {/if}
   <Select label="Format" bind:value={format} options={formats} />
+  {#if showFormatInfo}
+    <Prop>
+      <div class="format-info">
+        See <a href="#">here</a> to enable other video formats.
+      </div>
+    </Prop>
+  {/if}
   {#if formats.includes(format)}
     <Vector
       type="array"
@@ -83,14 +98,9 @@
       draggable={false}
       label="FPS"
       min={1}
-      max={60}
+      max={format === "gif" ? 50 : 60}
       step={1}
       bind:value={fps}
-    />
-    <Select
-      label="Quality"
-      bind:value={qualityPreset}
-      options={["high", "medium", "low"]}
     />
   {:else}
     <Vector
@@ -105,7 +115,22 @@
   {/if}
 </div>
 
+<!-- 
+      <Select
+      label="Quality"
+      bind:value={qualityPreset}
+      options={["high", "medium", "low"]}
+    /> -->
 <style>
+  .format-info {
+    color: black;
+    margin-top: -10px;
+    font-size: 10px;
+  }
+  .format-info a {
+    color: black;
+    font-weight: 600;
+  }
   .settings {
     color: black;
     position: relative;
