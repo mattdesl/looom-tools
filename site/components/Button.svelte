@@ -8,6 +8,7 @@
   export let input = false;
   export let color = "black";
   export let alt = "";
+  export let big = false;
 
   const dispatch = createEventDispatcher();
 
@@ -67,7 +68,8 @@
 </script>
 
 <button
-  class="toggle-button"
+  class:big
+  class="icon-button"
   disabled={!enabled}
   style="color: {_color}"
   title={alt}
@@ -80,6 +82,7 @@
 >
   {#if input}
     <input
+      class:big
       type="file"
       accept=".svg, image/svg"
       on:input={(e) => {
@@ -115,6 +118,10 @@
     will-change: transform, opacity;
     transition: all 0.1s ease-out;
   }
+  .big {
+    width: 32px;
+    height: 32px;
+  }
   button:hover {
     opacity: 1;
     transform: scale(1, 1);
@@ -141,10 +148,24 @@
     /* opacity: 0; */
     z-index: 10;
   }
-  :global(button.toggle-button svg) {
+  input.big {
+    width: 32px;
+    height: 32px;
+  }
+  :global(button.icon-button svg) {
     pointer-events: none;
     width: 100%;
     height: 100%;
     color: currentColor;
+  }
+  @media only screen and (max-device-width: 768px) {
+    .icon-button {
+      width: 32px;
+      height: 32px;
+    }
+    input {
+      width: 32px;
+      height: 32px;
+    }
   }
 </style>

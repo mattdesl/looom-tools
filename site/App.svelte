@@ -15,6 +15,9 @@
   import { isWebCodecsSupported, isWebMSupported } from "./components/record";
   import { onMount } from "svelte";
 
+  // const isMobile = /(Android|iOS|iPad|iPod|iPhone)/i.test(navigator.userAgent);
+  const isTablet = false; // Cannot detect this reliably?
+
   const hasMP4 = isWebCodecsSupported();
   const hasWebM = isWebMSupported();
   let formats = ["gif"];
@@ -74,13 +77,14 @@
   function setBackground(color, blending) {
     // console.log("New background", color);
     foreground = bestForeground(color);
+    if (svg === splashSVG) blending = false;
     background = blending ? Color.blend(color, foreground, 0.1).hex : color;
     foreground = Color.blend(foreground, color, 0.15).hex;
     document.body.style.backgroundColor = background;
     document.body.style.color = foreground;
     const corner = document.querySelector(".github-corner svg");
     if (corner) {
-      corner.style.fill = Color.blend(foreground, color, 0.5).hex;
+      corner.style.fill = Color.blend(foreground, color, 0).hex;
       corner.style.opacity = 1;
       corner.style.color = background;
     }
@@ -123,20 +127,20 @@
   <div class="content">
     <nav>
       <Button
+        alt="Upload SVG File"
+        input
+        on:file={({ detail }) => loadSVGFile(detail)}
+        color={foreground}
+        svg="file-upload"
+      />
+
+      <Button
         toggleable
         alt="Settings"
         color={foreground}
         enabled={!recording}
         bind:value={showSettings}
         svg={showSettings ? "settings-open" : "settings"}
-      />
-
-      <Button
-        alt="Upload SVG File"
-        input
-        on:file={({ detail }) => loadSVGFile(detail)}
-        color={foreground}
-        svg="file-upload"
       />
 
       <Button
@@ -164,18 +168,18 @@
     <div class="info">
       <div>
         <p>
-          Drag and drop a <a target="_blank" href="https://iorama.studio/"
-            >Looom</a
-          >
-          SVG file into this window to export it.
-        </p>
-      </div>
-      <div>
-        <p>
-          Web renderer and exporter by <a
-            href="https://twitter.com/mattdesl"
-            target="_blank">@mattdesl</a
-          >.
+          <!-- <span class="inline-upload">
+            <Button
+              alt="Upload SVG File"
+              input
+              on:file={({ detail }) => loadSVGFile(detail)}
+              color={foreground}
+              svg="file-upload"
+            />
+          </span> -->
+          <a target="_blank" href="https://iorama.studio/">Looom</a> web
+          exporter and renderer by
+          <a href="https://twitter.com/mattdesl" target="_blank">@mattdesl</a>.
         </p>
       </div>
     </div>
@@ -221,6 +225,19 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.25);
   }
+  .inline-upload {
+    display: inline-block;
+    position: relative;
+    top: 8px;
+    left: -12px;
+    padding: 0;
+    /* padding-right: 5px; */
+    margin: 0;
+    box-sizing: content-box;
+    padding: 5px;
+    width: 24px;
+    height: 24px;
+  }
   .canvas-container {
     position: absolute;
     top: 0;
@@ -234,6 +251,9 @@
     font-weight: 600;
   }
   p {
+    /* display: flex;
+    justify-content: flex-start;
+    align-items: center; */
     margin: 0;
     padding: 0;
     line-height: 1.5;
@@ -280,5 +300,18 @@
     justify-content: space-between;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  @media only screen and (max-device-width: 768px) {
+    nav {
+      padding: 20px;
+    }
+    .info {
+      font-size: 14px;
+    }
+    .inline-upload {
+      width: 32px;
+      top: 10px;
+    }
   }
 </style>
