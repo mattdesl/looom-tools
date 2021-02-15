@@ -73,7 +73,7 @@
   function reparse(data) {
     time = 0;
     if (data) {
-      console.log("Parsing");
+      // console.log("Parsing");
       try {
         try {
           weave = parseLooom(data, {
@@ -128,7 +128,7 @@
     _isRecording = true;
     resize(); // stop scaling to view
     redraw(); // force redraw so we don't see any missed frames
-    console.log("start record");
+    // console.log("start record");
     const w = parseInt(canvas.width, 10);
     const h = parseInt(canvas.height, 10);
     let curTime = 0;
@@ -177,7 +177,7 @@
 
   function stopRecord() {
     if (!_isRecording) return;
-    console.log("stop record");
+    // console.log("stop record");
     if (currentRecorder) {
       currentRecorder.cancel();
       currentRecorder = null;

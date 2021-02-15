@@ -1,9 +1,15 @@
 <script>
   import Color from "canvas-sketch-util/color";
+  import { createEventDispatcher } from "svelte";
 
+  export let toggleable = false;
   export let value = false;
   export let enabled = true;
+  export let input = false;
   export let color = "black";
+  export let alt = "";
+
+  const dispatch = createEventDispatcher();
 
   let _color;
   $: {
@@ -16,6 +22,13 @@
   }
 
   const svgs = {
+    "file-upload": `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-upload" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+  <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+  <line x1="12" y1="11" x2="12" y2="17" />
+  <polyline points="9 14 12 11 15 14" />
+</svg>`,
     "player-play": `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
    <path d="M7 4v16l13 -8z"></path>
@@ -57,10 +70,25 @@
   class="toggle-button"
   disabled={!enabled}
   style="color: {_color}"
-  on:click={() => {
-    value = !value;
+  title={alt}
+  on:click={(e) => {
+    if (toggleable) {
+      value = !value;
+    }
+    dispatch("click", e);
   }}
 >
+  {#if input}
+    <input
+      type="file"
+      accept=".svg, image/svg"
+      on:input={(e) => {
+        if (e.currentTarget.files.length > 0) {
+          dispatch("file", e.currentTarget.files[0]);
+        }
+      }}
+    />
+  {/if}
   {#if _svg}
     {@html _svg}
   {/if}
@@ -68,6 +96,7 @@
 
 <style>
   button {
+    cursor: pointer;
     width: 24px;
     height: 24px;
     border-radius: 4px;
@@ -95,7 +124,25 @@
   button:first-child {
     margin-left: 0;
   }
+  input {
+    text-indent: -999em;
+    cursor: pointer;
+    font-size: 10px;
+    color: transparent;
+    outline: none;
+    appearance: none;
+    background: none;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    /* opacity: 0; */
+    z-index: 10;
+  }
   :global(button.toggle-button svg) {
+    pointer-events: none;
     width: 100%;
     height: 100%;
     color: currentColor;

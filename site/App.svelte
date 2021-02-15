@@ -2,16 +2,18 @@
   // const parse = require("../src/parse-looom-svg");
   // const { createRenderer } = require("../src/canvas-rendering");
 
+  import { fade } from "svelte/transition";
   import LooomCanvas from "./components/LooomCanvas.svelte";
 
   import Color from "canvas-sketch-util/color";
   import Random from "canvas-sketch-util/random";
   import dragDrop from "drag-drop";
-  import initialSVGUrl from "../test/fixtures/Earthy1.svg";
+  import splashSVG from "./splash.svg.js";
   import Settings from "./components/Settings.svelte";
-  import ToggleButton from "./components/ToggleButton.svelte";
+  import Button from "./components/Button.svelte";
   import Progress from "./components/Progress.svelte";
   import { isWebCodecsSupported, isWebMSupported } from "./components/record";
+  import { onMount } from "svelte";
 
   const hasMP4 = isWebCodecsSupported();
   const hasWebM = isWebMSupported();
@@ -42,25 +44,20 @@
     }
   }
 
-  let svg;
   let foreground, background;
-  let initialBackground = Color.parse({
-    hsl: [Random.range(0, 360), 80, 90],
-  }).hex;
+  let initialBackground = "#FFD984";
+  let svg;
 
-  let loadInitial = true;
-  (async () => {
-    const resp = await fetch(initialSVGUrl);
-    const text = await resp.text();
-    if (loadInitial) svg = text;
-  })();
+  dragDrop(document.body, (files) => loadSVGFile(files[0]));
+  setBackground(initialBackground);
 
-  dragDrop(document.body, async (files) => {
-    loadInitial = false;
-    svg = await readFile(files[0]);
+  onMount(() => {
+    if (!svg) svg = splashSVG;
   });
 
-  setBackground(initialBackground);
+  async function loadSVGFile(file) {
+    svg = await readFile(file);
+  }
 
   async function readFile(file) {
     return new Promise((resolve, reject) => {
@@ -75,6 +72,7 @@
   }
 
   function setBackground(color, blending) {
+    // console.log("New background", color);
     foreground = bestForeground(color);
     background = blending ? Color.blend(color, foreground, 0.1).hex : color;
     foreground = Color.blend(foreground, color, 0.15).hex;
@@ -124,19 +122,34 @@
   </div>
   <div class="content">
     <nav>
-      <ToggleButton
+      <Button
+        toggleable
+        alt="Settings"
         color={foreground}
         enabled={!recording}
         bind:value={showSettings}
         svg={showSettings ? "settings-open" : "settings"}
       />
-      <ToggleButton
+
+      <Button
+        alt="Upload SVG File"
+        input
+        on:file={({ detail }) => loadSVGFile(detail)}
+        color={foreground}
+        svg="file-upload"
+      />
+
+      <Button
+        alt="Toggle Play"
+        toggleable
         color={foreground}
         enabled={!recording}
         bind:value={running}
         svg={running ? "player-pause" : "player-play"}
       />
-      <ToggleButton
+      <Button
+        alt="Toggle Record"
+        toggleable
         color={foreground}
         bind:value={recording}
         svg={recording ? "player-recording" : "player-record"}
@@ -168,25 +181,46 @@
     </div>
   </div>
   {#if showSettings}
-    <div class="settings-popup">
-      <Settings
-        bind:duration={settings.duration}
-        bind:fps={settings.fps}
-        bind:recenter={settings.recenter}
-        bind:format={settings.format}
-        {formats}
-        showFormatInfo={!hasAllFormats}
-        bind:qualityPreset={settings.qualityPreset}
-        bind:resamplePaths={settings.resamplePaths}
-        bind:sizing={settings.sizing}
-        bind:width={settings.width}
-        bind:height={settings.height}
-      />
+    <div
+      transition:fade={{ duration: 150 }}
+      class="settings-modal"
+      on:click={(e) => {
+        showSettings = false;
+      }}
+    >
+      <div
+        class="settings-popup"
+        on:click={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Settings
+          bind:duration={settings.duration}
+          bind:fps={settings.fps}
+          bind:recenter={settings.recenter}
+          bind:format={settings.format}
+          {formats}
+          showFormatInfo={!hasAllFormats}
+          bind:qualityPreset={settings.qualityPreset}
+          bind:resamplePaths={settings.resamplePaths}
+          bind:sizing={settings.sizing}
+          bind:width={settings.width}
+          bind:height={settings.height}
+        />
+      </div>
     </div>
   {/if}
 </main>
 
 <style>
+  .settings-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+  }
   .canvas-container {
     position: absolute;
     top: 0;
