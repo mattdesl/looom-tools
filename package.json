@@ -25,6 +25,7 @@
     "svg-parser": "^2.0.4"
   },
   "devDependencies": {
+    "@saschazar/wasm-webp": "^2.0.0",
     "canvas-sketch": "^0.7.4",
     "canvas-sketch-util": "^1.10.0",
     "chromotome": "^1.19.1",
@@ -41,8 +42,8 @@
   "browserslist": "last 2 Chrome versions",
   "scripts": {
     "site:vendor": "cp -r site/vendor/ public/vendor/",
-    "site:dev": "parcel site/index.html --out-dir=public",
-    "site:build": "parcel build site/index.html --out-dir=public"
+    "site:dev": "npm run site:vendor && parcel site/index.html --out-dir=public",
+    "site:build": "npm run site:vendor && parcel build site/index.html --out-dir=public"
   },
   "keywords": [],
   "repository": {

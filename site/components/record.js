@@ -1,20 +1,40 @@
 import GIF from "../vendor/gif.js";
-import workerScript from "../vendor/gif.worker.js.as-url";
-import Whammy from "../vendor/whammy";
+import Whammy from "../util/whammy";
+import webpWasm from "../vendor/wasm_webp.js";
+import webpOptions from "../util/webp-options";
+
+let webpModulePromise;
+
+function getWebpEncoderModule() {
+  if (webpModulePromise) return webpModulePromise;
+  webpModulePromise = new Promise((resolve) => {
+    const Module = webpWasm({
+      locateFile() {
+        console.log("locating");
+        return "vendor/wasm_webp.wasm";
+      },
+      onRuntimeInitialized() {
+        resolve(Module);
+      },
+    });
+  });
+  return webpModulePromise;
+}
 
 export function isWebCodecsSupported() {
   return typeof window.VideoEncoder === "function";
 }
 
 function detectWebM() {
-  var elem = document.createElement("canvas");
-  if (!!(elem.getContext && elem.getContext("2d"))) {
-    // was able or not to get WebP representation
-    return elem.toDataURL("image/webp").indexOf("data:image/webp") == 0;
-  } else {
-    // very old browser like IE 8, canvas not supported
-    return false;
-  }
+  return true;
+  // var elem = document.createElement("canvas");
+  // if (!!(elem.getContext && elem.getContext("2d"))) {
+  //   // was able or not to get WebP representation
+  //   return elem.toDataURL("image/webp").indexOf("data:image/webp") == 0;
+  // } else {
+  //   // very old browser like IE 8, canvas not supported
+  //   return false;
+  // }
 }
 
 let _isWebM = detectWebM();
@@ -131,15 +151,53 @@ export default function createRecorder(canvas, render, opts = {}) {
     const webpCanvas = document.createElement("canvas");
     const webpContext = webpCanvas.getContext("2d");
     const images = [];
+    let frame = 0;
+    const webp = await getWebpEncoderModule();
+
     let cancelled = false;
+
+    function convertBinaryStringToUint8Array(bStr) {
+      var i,
+        len = bStr.length,
+        u8_array = new Uint8Array(len);
+      for (var i = 0; i < len; i++) {
+        u8_array[i] = bStr.charCodeAt(i);
+      }
+      return u8_array;
+    }
+
+    function convertUint8ArrayToBinaryString(u8Array) {
+      var i,
+        len = u8Array.length,
+        b_str = "";
+      for (i = 0; i < len; i++) {
+        b_str += String.fromCharCode(u8Array[i]);
+      }
+      return b_str;
+    }
 
     return {
       async addFrame(imageData) {
-        webpCanvas.width = imageData.width;
-        webpCanvas.height = imageData.height;
-        webpContext.putImageData(imageData, 0, 0);
-        const url = webpCanvas.toDataURL("image/webp", encoder.quality);
-        images.push(url);
+        // webpCanvas.width = imageData.width;
+        // webpCanvas.height = imageData.height;
+        // webpContext.putImageData(imageData, 0, 0);
+        // const url = webpCanvas.toDataURL("image/webp", encoder.quality);
+
+        console.log("frame", frame++);
+        const binary = webp.encode(
+          imageData.data,
+          imageData.width,
+          imageData.height,
+          4,
+          webpOptions
+        );
+
+        // const binaryString = atob(url.slice(23));
+        // const binary = convertBinaryStringToUint8Array(binaryString);
+        const binaryString = convertUint8ArrayToBinaryString(binary);
+        // webp.free();
+
+        images.push(binaryString);
       },
       cancel() {
         cancelled = true;
@@ -149,7 +207,7 @@ export default function createRecorder(canvas, render, opts = {}) {
           if (cancelled) {
             resolve(null);
           } else {
-            const webm = Whammy.fromImageArray(images, fps, false);
+            const webm = Whammy.fromBinaryArray(images, fps, false);
             resolve(webm);
           }
         });
@@ -184,7 +242,7 @@ export default function createRecorder(canvas, render, opts = {}) {
     const gif = new GIF({
       width,
       height,
-      workerScript,
+      workerScript: "vendor/gif.worker.js",
       workers: 3,
       background: "#000",
       quality: 50,

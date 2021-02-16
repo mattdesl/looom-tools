@@ -605,6 +605,16 @@ const Whammy = (function () {
 
   return {
     Video: WhammyVideo,
+    fromBinaryArray: function (images, fps, outputAsArray) {
+      return toWebM(
+        images.map(function (image) {
+          var webp = parseWebP(parseRIFF(image));
+          webp.duration = 1000 / fps;
+          return webp;
+        }),
+        outputAsArray
+      );
+    },
     fromImageArray: function (images, fps, outputAsArray) {
       return toWebM(
         images.map(function (image) {
