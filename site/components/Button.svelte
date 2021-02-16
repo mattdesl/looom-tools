@@ -84,7 +84,7 @@
     <input
       class:big
       type="file"
-      accept=".svg, image/svg"
+      accept=".svg, image/svg+xml"
       on:input={(e) => {
         if (e.currentTarget.files.length > 0) {
           dispatch("file", e.currentTarget.files[0]);
