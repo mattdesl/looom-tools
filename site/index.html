@@ -18,14 +18,22 @@
   </style>
    
    <script type='module'>
-     let promise;
-     window.loadMP4Module = function loadMP4Module (opts) {
-       if (promise) return promise;
-       promise = import('https://unpkg.com/mp4-wasm@1.0.1/build/mp4.js').then(Module => {
-         return Module.default(opts);
-       });
-       return promise;
-     }
+    let promise;
+    window.loadMP4Module = function loadMP4Module (opts) {
+      if (promise) return promise;
+      promise = import('https://unpkg.com/mp4-wasm@1.0.1/build/mp4.js').then(Module => {
+        return Module.default(opts);
+      });
+      return promise;
+    }
+
+    fetch('/.netlify/functions/test').then(resp => {
+      return resp.text();
+    }).then(text => {
+      console.log('got result', text)
+    }).catch(err => {
+      console.error('no result', err);
+    })
    </script>
    <script src="index.js" async></script>
 </body>
