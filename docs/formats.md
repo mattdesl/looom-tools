@@ -24,7 +24,7 @@ Exporting as GIF should work across all browsers.
 
 ## WebM
 
-WebM is a new type of video format that is not encumbered by patent issues and royalties, but it currently isn't supported across all browsers. The `webm` option should appear in most versions of Chrome, but it may not be present in other browsers.
+WebM is a new type of video format that is not encumbered by patent issues and royalties, but it currently isn't supported across all browsers. The WebM option should appear in most versions of Chrome, but it may not be present in other browsers.
 
 Once you download the WebM file, there are many free WebM to MP4 converters that you can find online, which may be needed for social media uploading.
 
