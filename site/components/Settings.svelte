@@ -87,7 +87,10 @@
       </div>
     </Prop>
   {/if}
-  {#if formats.includes(format)}
+  {#if formats.find((fmt) => {
+    const val = fmt && fmt.value != null ? fmt.value : fmt;
+    return val === format;
+  })}
     <Vector
       type="array"
       label="Duration"

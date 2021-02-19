@@ -12,7 +12,11 @@
   import Settings from "./components/Settings.svelte";
   import Button from "./components/Button.svelte";
   import Progress from "./components/Progress.svelte";
-  import { isWebCodecsSupported, isWebMSupported } from "./components/record";
+  import {
+    isFrameSequenceSupported,
+    isWebCodecsSupported,
+    isWebMSupported,
+  } from "./components/record";
   import { onMount } from "svelte";
 
   // const isMobile = /(Android|iOS|iPad|iPod|iPhone)/i.test(navigator.userAgent);
@@ -20,13 +24,17 @@
 
   const hasMP4 = isWebCodecsSupported();
   const hasWebM = isWebMSupported();
-  let formats = ["gif"];
-  if (hasWebM) formats.push("webm");
-  if (hasMP4) formats.push("mp4");
+  const hasFile = isFrameSequenceSupported();
+  let formats = [{ value: "gif", name: "GIF Animation" }];
+  if (hasWebM) formats.push({ value: "webm", name: "WebM Video" });
+  if (hasMP4) formats.push({ value: "mp4", name: "MP4 Video (H264)" });
+  if (hasFile)
+    formats.push({ value: "sequence:png", name: "PNG File Sequence" });
+  // formats.push({ value: "sequence:svg", name: "SVG File Sequence" });
 
   const hasAllFormats = hasMP4 && hasWebM;
 
-  const initialFormat = formats[0];
+  const initialFormat = formats[0].value;
 
   let settings = {
     format: initialFormat,

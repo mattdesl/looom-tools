@@ -7,13 +7,14 @@
 
 The [Web Exporter](https://looom-tools.netlify.app) currently supports the following formats:
 
-- GIF
-- WebM
-- MP4
-
-However, depending on your browser, you might just see one or two of those. Here's how to use and enable the different formats.
+- GIF Animation — *all browsers*
+- WebM Video — *Chrome only*
+- PNG File Sequence — *Chrome only*
+- MP4 Video (H264) — *Chrome Canary only, behind a flag*
 
 To change formats in the Web Exporter, click the Settings (Gear icon) and then change the `Format` drop-down option.
+
+Depending on your browser, you might just see one or two formats. Here's how to use and enable the different formats.
 
 ## GIF
 
@@ -28,6 +29,12 @@ WebM is a new type of video format that is not encumbered by patent issues and r
 Once you download the WebM file, there are many free WebM to MP4 converters that you can find online, which may be needed for social media uploading.
 
 ###### :bulb: *After downloading, you can use one of the many online ["WebM to MP4" converters](https://cloudconvert.com/webm-to-mp4) to get a file that can be uploaded to social media.*
+
+## PNG File Sequence
+
+This feature relies on a recent version of Chrome, and writes PNG files directly to a folder of your choice. Upon clicking the Record button, you can navigate to a folder (or create a new one) that will hold all the numbered frames. Then, accept the read / write permission boxes that appear, and all frames will be saved sequentially into that folder.
+
+From there, you can use your favourite tool to assemble the image sequence into a high quality video, such as Photoshop, After Effects, etc.
 
 ## MP4
 

@@ -132,20 +132,41 @@
     const w = parseInt(canvas.width, 10);
     const h = parseInt(canvas.height, 10);
     let curTime = 0;
-    const drawFrame = (dt) => {
-      curTime += dt;
-      redrawWithTime(curTime);
-      const img = context.getImageData(0, 0, w, h);
-      return img;
-    };
     dispatcher("recordStart");
     const formats = {
       mp4: { ext: ".mp4", type: "video/mp4" },
       gif: { ext: ".gif", type: "image/gif" },
       webm: { ext: ".webm", type: "video/webm" },
+      "sequence:png": { ext: ".png", type: "image/png", sequence: true },
+      "sequence:svg": { ext: ".svg", type: "image/svg+xml", sequence: true },
     };
-    const { ext, type } = formats[format];
+    const { ext, type, sequence } = formats[format];
+
+    const drawFrame = ({ deltaTime, frame, totalFrames }) => {
+      curTime += deltaTime;
+      redrawWithTime(curTime);
+      if (sequence) {
+        if (ext === ".svg") {
+          return {
+            extension: ext,
+            type,
+            data: `<svg><text>${frame}</text></svg>`,
+          };
+        } else {
+          return {
+            extension: ext,
+            type,
+            url: canvas.toDataURL(type),
+          };
+        }
+      } else {
+        const img = context.getImageData(0, 0, w, h);
+        return img;
+      }
+    };
+
     const filename = `animation${ext}`;
+    let startTime;
     currentRecorder = createRecording(canvas, drawFrame, {
       progress(opts) {
         dispatcher("recordProgress", opts);
@@ -154,19 +175,27 @@
       height: h,
       duration,
       fps,
-      format,
+      format: sequence ? "sequence" : format,
       qualityPreset,
-    });
-    const startTime = rightNow();
-    currentRecorder.ready.then((buf) => {
-      if (buf) {
+      start() {
+        startTime = rightNow();
+      },
+      finish() {
         const endTime = rightNow();
         console.log("Finished in", endTime - startTime, "ms");
-        dispatcher("recordSuccess");
-        download(buf, filename, type);
-      } else {
+      },
+    });
+    currentRecorder.ready.then((buf) => {
+      if (buf === null) {
+        console.log("Recording cancelled");
         dispatcher("recordCancel");
+      } else {
+        dispatcher("recordSuccess");
+        if (buf && !sequence) {
+          download(buf, filename, type);
+        }
       }
+
       resize(); // scale back to view
       _isRecording = false;
       recording = false;
