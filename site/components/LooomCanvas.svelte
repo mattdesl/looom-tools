@@ -167,6 +167,7 @@
 
     const filename = `animation${ext}`;
     let startTime;
+    const totalFrames = Math.ceil(fps * duration);
     currentRecorder = createRecording(canvas, drawFrame, {
       progress(opts) {
         dispatcher("recordProgress", opts);
@@ -182,7 +183,9 @@
       },
       finish() {
         const endTime = rightNow();
-        console.log("Finished in", endTime - startTime, "ms");
+        const elapsed = endTime - startTime;
+        console.log("Finished in", elapsed, "ms");
+        console.log("mspf", elapsed / totalFrames);
       },
     });
     currentRecorder.ready.then((buf) => {

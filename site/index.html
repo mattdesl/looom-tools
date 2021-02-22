@@ -26,14 +26,6 @@
       });
       return promise;
     }
-
-    fetch('/.netlify/functions/test').then(resp => {
-      return resp.text();
-    }).then(text => {
-      console.log('got result', text)
-    }).catch(err => {
-      console.error('no result', err);
-    })
    </script>
    <script src="index.js" async></script>
 </body>
