@@ -23,8 +23,8 @@ export function isWebMSupported() {
   return _isWebM;
 }
 
-export function isFrameSequenceSupported () {
-  return typeof window.showDirectoryPicker === 'function';
+export function isFrameSequenceSupported() {
+  return typeof window.showDirectoryPicker === "function";
 }
 
 export default function createRecorder(canvas, render, opts = {}) {
@@ -33,11 +33,12 @@ export default function createRecorder(canvas, render, opts = {}) {
     fps = 30,
     qualityPreset = "high",
     format = "mp4",
+    transparent = false,
     width = 512,
     height = 512,
     progress = (v) => {},
     start = () => {},
-    finish = () => {}
+    finish = () => {},
   } = opts;
   const totalFrames = Math.ceil(fps * duration);
   const fpsInterval = 1 / fps;
@@ -56,21 +57,24 @@ export default function createRecorder(canvas, render, opts = {}) {
   });
 
   let encoder;
-  getEncoder().then((e) => {
-    if (e === null) cancelled = true;
-    encoder = e;
-    if (cancelled) {
-      // if we cancelled while fetching the encoder
+  getEncoder().then(
+    (e) => {
+      if (e === null) cancelled = true;
+      encoder = e;
+      if (cancelled) {
+        // if we cancelled while fetching the encoder
+        resolve(null);
+      } else {
+        start();
+        progress(0);
+        timeHandle = setTimeout(tick, 0);
+      }
+    },
+    (err) => {
+      cancelled = true;
       resolve(null);
-    } else {
-      start();
-      progress(0);
-      timeHandle = setTimeout(tick, 0);
     }
-  }, err => {
-    cancelled = true;
-    resolve(null);
-  });
+  );
 
   return {
     ready: promise,
@@ -90,7 +94,7 @@ export default function createRecorder(canvas, render, opts = {}) {
       return window.loadMP4Module().then((MP4) => MP4Encoder(MP4));
     } else if (format === "gif") {
       return GIFEncoder();
-    } else if (format === 'sequence') {
+    } else if (format === "sequence") {
       return SequenceExporter();
     } else {
       return WebMEncoder();
@@ -119,7 +123,7 @@ export default function createRecorder(canvas, render, opts = {}) {
       const imgData = render({
         deltaTime: fpsInterval,
         frame: frameIndex,
-        totalFrames
+        totalFrames,
       });
       await encoder.addFrame(imgData, frameIndex);
       progress({
@@ -144,12 +148,12 @@ export default function createRecorder(canvas, render, opts = {}) {
     });
   }
 
-  async function SequenceExporter () {
+  async function SequenceExporter() {
     let dir;
     try {
       dir = await window.showDirectoryPicker();
     } catch (err) {
-      if (err.code === 20 || err.name === 'AbortError') {
+      if (err.code === 20 || err.name === "AbortError") {
         // don't warn on abort
         return null;
       } else {
@@ -158,10 +162,10 @@ export default function createRecorder(canvas, render, opts = {}) {
     }
     return {
       async addFrame(frameData, frameIndex) {
-        const { extension = '', prefix = '', type = '' } = frameData;
+        const { extension = "", prefix = "", type = "" } = frameData;
 
         const frameDigitCount = String(totalFrames).length;
-        const curFrameName = String(frameIndex).padStart(frameDigitCount, '0');
+        const curFrameName = String(frameIndex).padStart(frameDigitCount, "0");
         const curFrameFile = `${prefix}${curFrameName}${extension}`;
 
         const fh = await dir.getFileHandle(curFrameFile, { create: true });
@@ -171,20 +175,19 @@ export default function createRecorder(canvas, render, opts = {}) {
         if (frameData.url) {
           blob = createBlobFromDataURL(frameData.url);
         } else {
-          const data = frameData.data || '';
-          const parts = Array.isArray(data) ? data : [ data ];
+          const data = frameData.data || "";
+          const parts = Array.isArray(data) ? data : [data];
           blob = new window.Blob(parts, { type });
         }
 
         await fw.write(blob);
         await fw.close();
       },
-      cancel () {
+      cancel() {},
+      async end() {
+        console.log("Finished");
       },
-      async end () {
-        console.log('Finished')
-      }
-    }
+    };
   }
 
   async function WebMEncoder() {
@@ -246,6 +249,10 @@ export default function createRecorder(canvas, render, opts = {}) {
     const gif = new GIF({
       width,
       height,
+      transparent,
+      dither: false,
+      background: "#fff",
+      repeat: 0,
       workerScript,
       workers: 3,
       background: "#000",
@@ -282,9 +289,8 @@ export default function createRecorder(canvas, render, opts = {}) {
   }
 }
 
-
-function createBlobFromDataURL (dataURL) {
-  const splitIndex = dataURL.indexOf(',');
+function createBlobFromDataURL(dataURL) {
+  const splitIndex = dataURL.indexOf(",");
   if (splitIndex === -1) {
     return new Blob();
   }
@@ -292,11 +298,11 @@ function createBlobFromDataURL (dataURL) {
   const byteString = atob(base64);
   const type = dataURL.slice(0, splitIndex);
   const mimeMatch = /data:([^;]+)/.exec(type);
-  const mime = (mimeMatch ? mimeMatch[1] : '') || undefined;
+  const mime = (mimeMatch ? mimeMatch[1] : "") || undefined;
   const ab = new ArrayBuffer(byteString.length);
   const ia = new Uint8Array(ab);
   for (var i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i);
   }
-  return new Blob([ ab ], { type: mime });
+  return new Blob([ab], { type: mime });
 }

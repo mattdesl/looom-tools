@@ -13,6 +13,7 @@
   export let recenter = false;
   export let refit = true;
   export let resamplePaths = false;
+  export let transparentBackground = false;
   export let fit = "contain";
   export let fitScale = 1;
   export let fitX = 0.5;
@@ -171,6 +172,7 @@
       progress(opts) {
         dispatcher("recordProgress", opts);
       },
+      transparent: transparentBackground,
       width: w,
       height: h,
       duration,
@@ -264,8 +266,16 @@
     context.save();
     context.scale(pixelRatio, pixelRatio);
     context.clearRect(0, 0, width, height);
+    // context.fillStyle = "blue";
+    // context.fillRect(0, 0, width, height);
     if (renderWeave) {
-      renderWeave(context, { width, height, time: curTime });
+      renderWeave(context, {
+        width,
+        height,
+        time: curTime,
+        clear: false,
+        background: !transparentBackground,
+      });
     }
     context.restore();
   }

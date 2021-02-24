@@ -51,6 +51,13 @@ module.exports = function parse(text, opts = {}) {
       if (!show) return;
       thread.frames.forEach((frame) => {
         frame.paths.forEach((path) => {
+          // TODO: explore another way to register single-dots
+          // looom stores them as just a single MoveTo command
+          // which won't render in most SVG renderers
+          if (path.commands.length === 1) {
+            path.commands = path.commands.slice();
+            path.commands.push(["L", path.commands[0][1], path.commands[0][2]]);
+          }
           path.commands.forEach((command) => {
             const t = command[0];
             if (t === "M" || t === "L") {
