@@ -7,7 +7,6 @@
   import Color from "canvas-sketch-util/color";
 
   import rightNow from "right-now";
-  import { quantize } from "gifenc";
 
   const MAX_SIZE = 4096 * 4;
 

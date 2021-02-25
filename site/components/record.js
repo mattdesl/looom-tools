@@ -1,7 +1,7 @@
 // import GIF from "../vendor/gif.js";
 // import workerScript from "../vendor/gif.worker.js.as-url";
 import Whammy from "../vendor/whammy";
-import { GIFEncoder } from "gifenc/src/encoder.js";
+import { GIFEncoder } from "gifenc";
 
 export function isWebCodecsSupported() {
   return typeof window.VideoEncoder === "function";
