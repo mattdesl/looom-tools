@@ -1,7 +1,7 @@
-import GIF from "../vendor/gif.js";
-import workerScript from "../vendor/gif.worker.js.as-url";
+// import GIF from "../vendor/gif.js";
+// import workerScript from "../vendor/gif.worker.js.as-url";
 import Whammy from "../vendor/whammy";
-import FastGIF, { quantize, nearest } from "gif-wasm/src/encoder.js";
+import { GIFEncoder } from "gifenc/src/encoder.js";
 
 export function isWebCodecsSupported() {
   return typeof window.VideoEncoder === "function";
@@ -35,12 +35,16 @@ export default function createRecorder(canvas, render, opts = {}) {
     qualityPreset = "high",
     format = "mp4",
     transparent = false,
+    quantizeWithAlpha = true, // for GIF
+    backgroundColor = [0, 0, 0], // for GIF
+    knownColors = [], // for GIF quantization
     width = 512,
     height = 512,
     progress = (v) => {},
     start = () => {},
     finish = () => {},
   } = opts;
+
   const totalFrames = Math.ceil(fps * duration);
   const fpsInterval = 1 / fps;
   const frames = new Array(totalFrames).fill(0).map((_, i) => i);
@@ -50,7 +54,7 @@ export default function createRecorder(canvas, render, opts = {}) {
   let frameIndex = 0;
   let finished = false;
 
-  const totalPasses = format === "gif" ? 2 : 1;
+  const totalPasses = 1; // for other formats maybe?
 
   let resolve;
   const promise = new Promise((cb) => {
@@ -67,11 +71,11 @@ export default function createRecorder(canvas, render, opts = {}) {
         resolve(null);
       } else {
         start();
-        progress(0);
         timeHandle = setTimeout(tick, 0);
       }
     },
     (err) => {
+      if (err) console.error(err);
       cancelled = true;
       resolve(null);
     }
@@ -95,7 +99,6 @@ export default function createRecorder(canvas, render, opts = {}) {
       return window.loadMP4Module().then((MP4) => MP4Encoder(MP4));
     } else if (format === "gif") {
       return FastGIFEncoder();
-      // return GIFEncoder();
     } else if (format === "sequence") {
       return SequenceExporter();
     } else {
@@ -128,17 +131,17 @@ export default function createRecorder(canvas, render, opts = {}) {
         totalFrames,
       });
       await encoder.addFrame(imgData, frameIndex);
-      progress({
-        progress: frameIndex / totalFrames,
-        totalFrames,
-        totalPasses,
-        pass: 0,
-        frame: frameIndex,
-      });
+      if (format !== "gif") {
+        // TODO: should clean this up, encoders should send progress...
+        progress({
+          progress: frameIndex / totalFrames,
+          totalPasses,
+          pass: 0,
+        });
+      }
       frameIndex++;
       timeHandle = setTimeout(tick, 0);
     } else {
-      progress(1);
       finishEncoding();
     }
   }
@@ -247,8 +250,8 @@ export default function createRecorder(canvas, render, opts = {}) {
   async function FastGIFEncoder() {
     const fpsInterval = 1 / fps;
     const delay = fpsInterval * 1000;
-    const gif = FastGIF();
 
+    const gif = GIFEncoder({ auto: false });
     gif.writeHeader();
 
     const frames = new Array(totalFrames).fill(null);
@@ -256,7 +259,7 @@ export default function createRecorder(canvas, render, opts = {}) {
     let workerIndex = 0;
     const events = [];
     const workerCount = 2;
-    let framesProcessed = 0;
+    let remainingFramesToProcess = totalFrames;
 
     let finishResolve;
     const finishPromise = new Promise((cb) => {
@@ -268,8 +271,17 @@ export default function createRecorder(canvas, render, opts = {}) {
       worker.addEventListener("message", (ev) => {
         const { frame, data } = ev.data;
         frames[frame] = data;
-        framesProcessed++;
-        if (framesProcessed >= totalFrames) {
+        remainingFramesToProcess--;
+
+        // we send progress only when we finish encoding a frame
+        progress({
+          progress: (totalFrames - remainingFramesToProcess) / totalFrames,
+          totalFrames,
+          totalPasses,
+          pass: 0,
+        });
+
+        if (remainingFramesToProcess <= 0) {
           finishResolve();
         }
       });
@@ -288,12 +300,13 @@ export default function createRecorder(canvas, render, opts = {}) {
 
     return {
       async addFrame(imageData, frame) {
-        const hasAlpha = false;
-        const maxColors = 256;
-
         const next = workers[workerIndex++ % workers.length];
         next.postMessage(
           {
+            transparent,
+            quantizeWithAlpha,
+            backgroundColor,
+            knownColors,
             frame,
             repeat: 0,
             delay,
@@ -313,52 +326,10 @@ export default function createRecorder(canvas, render, opts = {}) {
         }
 
         gif.finish();
+
+        workers.forEach((w) => w.terminate());
+
         return gif.bytesView();
-      },
-    };
-  }
-
-  async function GIFEncoder() {
-    let fpsInterval = 1 / fps;
-
-    const gif = new GIF({
-      width,
-      height,
-      transparent,
-      dither: false,
-      background: "#fff",
-      repeat: 0,
-      workerScript,
-      workers: 3,
-      background: "#000",
-      quality: 50,
-    });
-
-    let resolve;
-    let promise = new Promise((cb) => {
-      resolve = cb;
-    });
-    gif.on("finished", (blob) => {
-      resolve(blob);
-    });
-    gif.on("progress", (v) => {
-      progress({
-        progress: v,
-        totalFrames,
-        totalPasses,
-        pass: 1,
-        frame: undefined,
-      });
-    });
-
-    return {
-      async addFrame(imageData) {
-        gif.addFrame(imageData, { delay: fpsInterval * 1000 });
-      },
-      cancel() {},
-      async end() {
-        gif.render();
-        return promise;
       },
     };
   }

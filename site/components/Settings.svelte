@@ -21,6 +21,7 @@
   export let recenter = false;
   export let resamplePaths = false;
   export let transparentBackground = false;
+  export let quantizeWithAlpha = false;
   export let width = 1024;
   export let height = 768;
   export let sizing = "weave";
@@ -111,6 +112,9 @@
       label="Transparent Background"
       bind:value={transparentBackground}
     />
+    {#if format === "gif" && transparentBackground}
+      <Checkbox label="Alpha Quantization" bind:value={quantizeWithAlpha} />
+    {/if}
   {/if}
 </div>
 

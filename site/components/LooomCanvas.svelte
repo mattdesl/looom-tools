@@ -4,8 +4,10 @@
   import { createEventDispatcher, onMount } from "svelte";
   import objectFit from "../../src/util/fit";
   import createRecording from "./record";
+  import Color from "canvas-sketch-util/color";
 
   import rightNow from "right-now";
+  import { quantize } from "gifenc";
 
   const MAX_SIZE = 4096 * 4;
 
@@ -30,6 +32,7 @@
   export let fps = 30;
   export let duration = 5;
   export let qualityPreset = "high";
+  export let quantizeWithAlpha = true;
   export let time = 0;
   export let scaleToView = true;
 
@@ -124,6 +127,23 @@
     };
   });
 
+  function getKnownColors() {
+    if (!weave) return [];
+    const set = new Set();
+    if (!transparentBackground) set.add(weave.backgroundColor);
+    weave.threads.forEach((t) => {
+      const opt = t.options;
+      if (!opt.visible) return;
+      if (opt.stroke && opt.strokeOpacity >= 1) {
+        set.add(opt.stroke);
+      }
+      if (opt.fill && opt.fillOpacity >= 1) {
+        set.add(opt.fill);
+      }
+    });
+    return [...set].map((hex) => Color.parse(hex).rgb);
+  }
+
   function startRecord() {
     if (_isRecording) return;
     _isRecording = true;
@@ -173,7 +193,10 @@
       progress(opts) {
         dispatcher("recordProgress", opts);
       },
+      backgroundColor: Color.parse(weave.backgroundColor || "#000").rgb,
+      quantizeWithAlpha,
       transparent: transparentBackground,
+      knownColors: getKnownColors(),
       width: w,
       height: h,
       duration,
@@ -272,11 +295,17 @@
     // context.fillStyle = "blue";
     // context.fillRect(0, 0, width, height);
     if (renderWeave) {
+      let showBackground = !transparentBackground;
+      if (format === "gif" && !quantizeWithAlpha) {
+        // If we wish to quantize with just RGB channel,
+        // then we can turn the background back on and alpha-cut it later
+        showBackground = true;
+      }
       renderWeave(context, {
         width,
         height,
         time: curTime,
-        background: !transparentBackground,
+        background: showBackground,
       });
     }
     context.restore();

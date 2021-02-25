@@ -113,6 +113,7 @@
       recenter={settings.recenter}
       transparentBackground={settings.transparentBackground &&
         !ignoreTransparency.includes(settings.format)}
+      quantizeWithAlpha={settings.quantizeWithAlpha}
       fps={settings.fps}
       duration={settings.duration}
       qualityPreset={settings.qualityPreset}
@@ -217,6 +218,7 @@
           {formats}
           showFormatInfo={!hasAllFormats}
           bind:transparentBackground={settings.transparentBackground}
+          bind:quantizeWithAlpha={settings.quantizeWithAlpha}
           bind:qualityPreset={settings.qualityPreset}
           bind:resamplePaths={settings.resamplePaths}
           bind:sizing={settings.sizing}

@@ -44,6 +44,14 @@ Once you've installed Chrome Canary, open it and navigate to [chrome://flags/](c
 
 ###### :bulb: *Note: MP4 exporting is still experimental and may change in the future.*
 
+---
+
+#### Note: GIF Transparency + "Alpha Quantization"
+
+By default, any pixels matching your Weave's background color will be treated as fully transparent. This might be a problem if one of your foreground threads is using the same exact color as the background.
+
+If you run into this issue, you can change this behaviour by turning on Alpha Quantization, which will cut out the background properly, but may leave jagged edges around your shapes.
+
 ## 
 
 #### <sup>[← Back to Documentation](../README.md)
