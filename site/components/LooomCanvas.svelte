@@ -265,7 +265,7 @@
   function redrawWithTime(curTime = 0) {
     context.save();
     context.scale(pixelRatio, pixelRatio);
-    context.clearRect(0, 0, width, height);
+    // context.clearRect(0, 0, width, height);
     // context.fillStyle = "blue";
     // context.fillRect(0, 0, width, height);
     if (renderWeave) {
@@ -273,7 +273,6 @@
         width,
         height,
         time: curTime,
-        clear: false,
         background: !transparentBackground,
       });
     }
