@@ -20,6 +20,7 @@
   // };
   export let recenter = false;
   export let resamplePaths = false;
+  export let transparentBackground = false;
   export let width = 1024;
   export let height = 768;
   export let sizing = "weave";
@@ -87,37 +88,28 @@
       </div>
     </Prop>
   {/if}
-  {#if formats.find((fmt) => {
-    const val = fmt && fmt.value != null ? fmt.value : fmt;
-    return val === format;
-  })}
-    <Vector
-      type="array"
-      label="Duration"
-      min={0.5}
-      draggable={false}
-      max={50000}
-      step={0.1}
-      units="seconds"
-      bind:x={duration}
-    />
-    <NumberSpinner
-      draggable={false}
-      label="FPS"
-      min={1}
-      max={format === "gif" ? 50 : 60}
-      step={1}
-      bind:value={fps}
-    />
-  {:else}
-    <Vector
-      type="array"
-      label="Time"
-      min={0.0}
-      max={50000}
-      step={0.1}
-      units="seconds"
-      bind:x={time}
+  <Vector
+    type="array"
+    label="Duration"
+    min={0.5}
+    draggable={false}
+    max={50000}
+    step={0.1}
+    units="seconds"
+    bind:x={duration}
+  />
+  <NumberSpinner
+    draggable={false}
+    label="FPS"
+    min={1}
+    max={format === "gif" ? 50 : 60}
+    step={1}
+    bind:value={fps}
+  />
+  {#if format !== "mp4" && format !== "webm"}
+    <Checkbox
+      label="Transparent Background"
+      bind:value={transparentBackground}
     />
   {/if}
 </div>

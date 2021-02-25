@@ -34,6 +34,7 @@ export default function createRecorder(canvas, render, opts = {}) {
     fps = 30,
     qualityPreset = "high",
     format = "mp4",
+    transparent = false,
     width = 512,
     height = 512,
     progress = (v) => {},
@@ -93,8 +94,8 @@ export default function createRecorder(canvas, render, opts = {}) {
       }
       return window.loadMP4Module().then((MP4) => MP4Encoder(MP4));
     } else if (format === "gif") {
-      // return GIFEncoder();
       return FastGIFEncoder();
+      // return GIFEncoder();
     } else if (format === "sequence") {
       return SequenceExporter();
     } else {
@@ -323,6 +324,10 @@ export default function createRecorder(canvas, render, opts = {}) {
     const gif = new GIF({
       width,
       height,
+      transparent,
+      dither: false,
+      background: "#fff",
+      repeat: 0,
       workerScript,
       workers: 3,
       background: "#000",

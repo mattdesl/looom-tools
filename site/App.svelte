@@ -22,6 +22,7 @@
   // const isMobile = /(Android|iOS|iPad|iPod|iPhone)/i.test(navigator.userAgent);
   const isTablet = false; // Cannot detect this reliably?
 
+  const ignoreTransparency = ["mp4", "webm"];
   const hasMP4 = isWebCodecsSupported();
   const hasWebM = isWebMSupported();
   const hasFile = isFrameSequenceSupported();
@@ -110,6 +111,8 @@
     <LooomCanvas
       resamplePaths={settings.resamplePaths}
       recenter={settings.recenter}
+      transparentBackground={settings.transparentBackground &&
+        !ignoreTransparency.includes(settings.format)}
       fps={settings.fps}
       duration={settings.duration}
       qualityPreset={settings.qualityPreset}
@@ -213,6 +216,7 @@
           bind:format={settings.format}
           {formats}
           showFormatInfo={!hasAllFormats}
+          bind:transparentBackground={settings.transparentBackground}
           bind:qualityPreset={settings.qualityPreset}
           bind:resamplePaths={settings.resamplePaths}
           bind:sizing={settings.sizing}

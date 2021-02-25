@@ -16,7 +16,11 @@ function createRenderer(weave, opts = {}) {
   // expand polylines
   // expandPolylines(weave);
 
-  const { resamplePaths = false, cacheOffsetPaths = true } = opts;
+  const {
+    resamplePaths = false,
+    cacheOffsetPaths = true,
+    expandStrokes = true,
+  } = opts;
 
   let refit = true;
   if (opts.fit === false) refit = false;
@@ -36,7 +40,13 @@ function createRenderer(weave, opts = {}) {
   }
 
   return (context, props) => {
-    const { width = weave.width, height = weave.height, time = 0 } = props;
+    const {
+      width = weave.width,
+      height = weave.height,
+      time = 0,
+      clear = true,
+      background = true,
+    } = props;
 
     if (refit !== false) {
       const fitted = fitObject({
@@ -56,9 +66,11 @@ function createRenderer(weave, opts = {}) {
       mat2d.scale(refitTransform, refitTransform, [sx, sy]);
     }
 
-    context.fillStyle = weave.backgroundColor;
-    context.clearRect(0, 0, width, height);
-    context.fillRect(0, 0, width, height);
+    if (clear) context.clearRect(0, 0, width, height);
+    if (background) {
+      context.fillStyle = weave.backgroundColor;
+      context.fillRect(0, 0, width, height);
+    }
 
     let current_mask = null;
 
@@ -152,7 +164,8 @@ function createRenderer(weave, opts = {}) {
       time,
       resamplePaths,
       cacheOffsetPaths,
-      masking
+      masking,
+      expandStrokes
     );
 
     offscreen.context.restore();
@@ -223,7 +236,8 @@ function renderThread(
   time,
   resamplePaths,
   cacheOffsetPaths,
-  masking = false
+  masking = false,
+  expandStrokes = true
 ) {
   const {
     visible = true,
@@ -273,7 +287,7 @@ function renderThread(
     context.save();
     context.transform(...path.transform);
 
-    if (isStroke && path.strokeProfile) {
+    if (isStroke && path.strokeProfile && expandStrokes) {
       let offsetPaths = path.offsetPaths;
       if (!offsetPaths) {
         offsetPaths = expandPolylines(thread, path, resamplePaths);

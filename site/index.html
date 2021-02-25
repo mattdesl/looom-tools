@@ -16,17 +16,6 @@
   <style>
   .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}
   </style>
-   
-   <script type='module'>
-    let promise;
-    window.loadMP4Module = function loadMP4Module (opts) {
-      if (promise) return promise;
-      promise = import('https://unpkg.com/mp4-wasm@1.0.1/build/mp4.js').then(Module => {
-        return Module.default(opts);
-      });
-      return promise;
-    }
-   </script>
    <script src="index.js" async></script>
 </body>
 </html>
