@@ -19,6 +19,9 @@
   } from "./components/record";
   import { onMount } from "svelte";
 
+  // import testSplash from "../test/fixtures/Lucky.svg";
+  // console.log(testSplash);
+
   // const isMobile = /(Android|iOS|iPad|iPod|iPhone)/i.test(navigator.userAgent);
   const isTablet = false; // Cannot detect this reliably?
 
@@ -57,15 +60,27 @@
   }
 
   let foreground, background;
-  let initialBackground = "#FFD984";
+  let initialBackground = "#FFD6BB";
   let svg;
+  let looom;
 
   dragDrop(document.body, (files) => loadSVGFile(files[0]));
   setBackground(initialBackground);
 
   onMount(() => {
-    if (!svg) svg = splashSVG;
+    if (!svg) loadSplash();
   });
+
+  function downloadJSON() {
+    if (looom) {
+      looom.downloadJSON();
+    }
+  }
+
+  async function loadSplash() {
+    svg = splashSVG;
+    // svg = await (await fetch(testSplash)).text();
+  }
 
   async function loadSVGFile(file) {
     svg = await readFile(file);
@@ -109,6 +124,7 @@
 <main>
   <div class="canvas-container">
     <LooomCanvas
+      bind:this={looom}
       resamplePaths={settings.resamplePaths}
       recenter={settings.recenter}
       transparentBackground={settings.transparentBackground &&
@@ -196,6 +212,8 @@
       </div>
     </div>
   </div>
+  <!-- TODO: Because of binding, settings needs to show on mount
+    for it to register the values as 'defaults' for the app... fix this -->
   {#if showSettings}
     <div
       transition:fade={{ duration: 150 }}
@@ -211,6 +229,7 @@
         }}
       >
         <Settings
+          on:download={downloadJSON}
           bind:duration={settings.duration}
           bind:fps={settings.fps}
           bind:recenter={settings.recenter}

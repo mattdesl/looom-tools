@@ -12,9 +12,14 @@ function getFrameIndex(thread, time, random = defaultMathRandom) {
     playMode = 0,
   } = thread.options;
   if (playMode === 3) return Math.floor(random() * thread.frames.length);
+
+  const intervalMS = 1 / speed * 1000;
+  const timeMS = Math.round((time * 1000) / intervalMS) * intervalMS;
+
+
   const duration = thread.frames.length / speed;
   const N = thread.frames.length;
-  const elapsed = latched ? 0 : time + timeOffset;
+  const elapsed = latched ? 0 : (timeMS / 1000) + (timeOffset / 1000);
 
   let playDirection;
   if (playMode === 0 || playMode === 1) {

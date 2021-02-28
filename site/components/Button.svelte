@@ -9,6 +9,8 @@
   export let color = "black";
   export let alt = "";
   export let big = false;
+  export let fullWidth = false;
+  export let text = "";
 
   const dispatch = createEventDispatcher();
 
@@ -29,6 +31,13 @@
   <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
   <line x1="12" y1="11" x2="12" y2="17" />
   <polyline points="9 14 12 11 15 14" />
+</svg>`,
+    "file-download": `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-download" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+  <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+  <line x1="12" y1="11" x2="12" y2="17" />
+  <polyline points="9 14 12 17 15 14" />
 </svg>`,
     "player-play": `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -67,9 +76,10 @@
   $: _svg = svg ? svgs[svg] : null;
 </script>
 
-<button
-  class:big
+<div
   class="icon-button"
+  class:full-width={fullWidth}
+  class:icon-button-text={Boolean(text)}
   disabled={!enabled}
   style="color: {_color}"
   title={alt}
@@ -80,28 +90,29 @@
     dispatch("click", e);
   }}
 >
-  {#if input}
-    <input
-      class:big
-      type="file"
-      accept=".svg, image/svg+xml"
-      on:input={(e) => {
-        if (e.currentTarget.files.length > 0) {
-          dispatch("file", e.currentTarget.files[0]);
-        }
-      }}
-    />
-  {/if}
-  {#if _svg}
-    {@html _svg}
-  {/if}
-</button>
+  <div class="inner-button" class:big>
+    {#if input}
+      <input
+        class:big
+        type="file"
+        accept=".svg, image/svg+xml"
+        on:input={(e) => {
+          if (e.currentTarget.files.length > 0) {
+            dispatch("file", e.currentTarget.files[0]);
+          }
+        }}
+      />
+    {/if}
+    {#if _svg}
+      {@html _svg}
+    {/if}
+  </div>
+  {#if text}<span>{text}</span>{/if}
+</div>
 
 <style>
-  button {
+  .icon-button {
     cursor: pointer;
-    width: 24px;
-    height: 24px;
     border-radius: 4px;
     padding: 5px;
     appearance: none;
@@ -118,17 +129,34 @@
     will-change: transform, opacity;
     transition: all 0.1s ease-out;
   }
+  .icon-button.full-width {
+    transform: initial;
+    width: 100%;
+    padding: 0;
+  }
+  .icon-button-text {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .icon-button-text span {
+    margin-left: 5px;
+  }
+  .inner-button {
+    width: 24px;
+    height: 24px;
+  }
   .big {
     width: 32px;
     height: 32px;
   }
-  button:hover {
+  .icon-button:hover {
     opacity: 1;
     transform: scale(1, 1);
     will-change: transform, opacity;
     transition: all 0.1s ease-out;
   }
-  button:first-child {
+  .icon-button:first-child {
     margin-left: 0;
   }
   input {
@@ -152,14 +180,14 @@
     width: 32px;
     height: 32px;
   }
-  :global(button.icon-button svg) {
+  :global(.icon-button svg) {
     pointer-events: none;
     width: 100%;
     height: 100%;
     color: currentColor;
   }
   @media only screen and (max-device-width: 768px) {
-    .icon-button {
+    .inner-button {
       width: 32px;
       height: 32px;
     }

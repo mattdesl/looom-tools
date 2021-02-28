@@ -1,11 +1,13 @@
 <script>
   import { fly } from "svelte/transition";
+  import { createEventDispatcher } from "svelte";
 
   import Checkbox from "./ui/Checkbox.svelte";
   import NumberSpinner from "./ui/Number.svelte";
   import Prop from "./ui/Prop.svelte";
   import Select from "./ui/Select.svelte";
   import Vector from "./ui/Vector.svelte";
+  import Button from "./Button.svelte";
   // {
   //   width: 1024,
   //   height: 768,
@@ -18,6 +20,9 @@
   //   format: "gif", // json, mp4, gif, png, jpg
   //   preset: "high",
   // };
+
+  const dispatch = createEventDispatcher();
+
   export let recenter = false;
   export let resamplePaths = false;
   export let transparentBackground = false;
@@ -53,6 +58,14 @@
   }}
 >
   <!-- <header>Export Settings</header> -->
+  <Prop label={true}>
+    <Button
+      on:click={() => dispatch("download")}
+      svg="file-download"
+      text="Download JSON"
+      fullWidth
+    />
+  </Prop>
   <Checkbox label="Resample Paths" bind:value={resamplePaths} />
   <Checkbox label="Recenter" bind:value={recenter} />
   <Select

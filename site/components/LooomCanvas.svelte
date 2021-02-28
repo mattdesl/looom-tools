@@ -49,15 +49,6 @@
   let frameElapsed;
   let frameLastTime;
 
-  const download = (buf, filename, type) => {
-    const blob = buf instanceof Blob ? buf : new Blob([buf], { type });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = filename;
-    anchor.click();
-  };
-
   $: recenter, resamplePaths, refit, fitX, fitY, fitScale, fit, reparse(data);
   $: sizing, customWidth, customHeight, resize();
 
@@ -73,10 +64,28 @@
     else stopRecord();
   }
 
+  function downloadBlob(buf, filename, type) {
+    const blob = buf instanceof Blob ? buf : new Blob([buf], { type });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+  }
+
+  export function downloadJSON() {
+    if (!weave) {
+      return alert("Drop a valid Looom file to download it");
+    }
+    const text = JSON.stringify(weave, undefined, 2);
+    const type = "application/json";
+    const blob = new Blob([text], { type });
+    downloadBlob(blob, "weave.json", { type });
+  }
+
   function reparse(data) {
     time = 0;
     if (data) {
-      // console.log("Parsing");
       try {
         try {
           weave = parseLooom(data, {
@@ -219,7 +228,7 @@
       } else {
         dispatcher("recordSuccess");
         if (buf && !sequence) {
-          download(buf, filename, type);
+          downloadBlob(buf, filename, type);
         }
       }
 
@@ -263,7 +272,9 @@
 
     let now = rightNow();
     const dt = (now - lastTime) / 1000;
-    if (running && _isRunning) time += dt;
+    if (running && _isRunning) {
+      time += dt;
+    }
 
     let newFrame = false;
     const fpsInterval = 1000 / fps;
@@ -284,6 +295,7 @@
   }
 
   function redraw() {
+    // time = 10 / fps;
     redrawWithTime(time);
   }
 
