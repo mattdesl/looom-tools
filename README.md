@@ -6,7 +6,7 @@ A suite of JavaScript-based tools for parsing and rendering Looom animation soft
 
 ## Looom
 
-[Looom](https://iorama.studio/) is an experimental animation software for iOS tablets, which allows you to draw and animate short loops like this:
+[Looom](https://iorama.studio/looom) is an experimental animation software for iOS tablets, which allows you to draw and animate short loops like this:
 
 ![animation](./docs/animation.gif)
 
